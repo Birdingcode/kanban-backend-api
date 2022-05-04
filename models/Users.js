@@ -53,6 +53,11 @@ User.beforeCreate(async (user, option) => {
   user.password = bcrypt.hashSync(user.password, salt)
 })
 
+User.beforeSave(async (user, option) => {
+  const salt = await bcrypt.genSaltSync()
+  user.password = bcrypt.hashSync(user.password, salt)
+})
+
 // Return JSON Web Token
 User.prototype.getJwtToken = function () {
   return jwt.sign({ id: this.userID }, process.env.JWT_SECRET, {

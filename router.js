@@ -10,9 +10,13 @@ apiRouter.get("/", (req, res) => res.json("Hello, if you see this message that m
 apiRouter.post("/register", auth.isAuthenticateduser, authController.registerUser)
 apiRouter.post("/login", authController.loginUser)
 apiRouter.get("/userManagement", auth.isAuthenticateduser, userController.getAllUser)
+apiRouter.post("/changePassword", auth.isAuthenticateduser, authController.changePassword)
+apiRouter.post("/changeEmail", auth.isAuthenticateduser, authController.changeEmail)
+apiRouter.post("/changeStatus", auth.isAuthenticateduser, userController.changeStatus)
 
 apiRouter.post("/doesUsernameExist", authController.doesUsernameExist)
 apiRouter.post("/doesEmailExist", authController.doesEmailExist)
 apiRouter.post("/doesPasswordCondition", authController.doesPasswordCondition)
+apiRouter.post("/doesNewEmailExist", authController.doesNewEmailExist)
 
 module.exports = apiRouter

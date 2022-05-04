@@ -44,28 +44,79 @@ exports.loginUser = catchAsyncErrors(async (req, res, next) => {
   sendToken(user, 200, res)
 })
 
-exports.doesUsernameExist = function (req, res) {
-  User.findOne(req.body.username)
-    .then(function () {
-      res.json(true)
-    })
-    .catch(function (e) {
-      res.json(false)
-    })
+exports.doesUsernameExist = async function (req, res) {
+  const findUser = await User.findOne({ where: { username: req.body.username } })
+  if (findUser != null) {
+    console.log("Found!")
+    res.json(true)
+  } else {
+    console.log("Not Found!")
+    res.json(false)
+  }
 }
 
 exports.doesEmailExist = async function (req, res) {
-  User.findOne(req.body.email)
-    .then(function () {
-      res.json(true)
-    })
-    .catch(function (e) {
-      res.json(false)
-    })
-}
-
-exports.doesPasswordCondition = async function (req, res) {
-  if (!req.body.password.match(/^[a-zA-Z0-9!@#$%^&*]{8,10}$/)) {
+  const findEmail = await User.findOne({ where: { email: req.body.oldEmail } })
+  if (findEmail != null) {
+    console.log("Found")
     res.json(true)
+  } else {
+    console.log("Not Found!")
+    res.json(false)
   }
 }
+
+exports.doesNewEmailExist = async function (req, res) {
+  const findNewEmail = await User.findOne({ where: { email: req.body.newEmail } })
+  if (findNewEmail != null) {
+    console.log("Found")
+    res.json(true)
+  } else {
+    console.log("Not Found!")
+    res.json(false)
+  }
+}
+
+exports.changeEmail = catchAsyncErrors(async function (req, res, next) {
+  const { oldEmail, newEmail, cfmEmail } = req.body
+  if (!oldEmail || !newEmail || !cfmEmail) {
+    return next(new ErrorHandler("Please fill in all fields", 400))
+  }
+  if (newEmail !== cfmEmail) {
+    return next(new ErrorHandler("Passwords do not match", 401))
+  }
+  const user = await User.findOne({ where: { email: oldEmail } })
+  if (!user) {
+    return next(new ErrorHandler("Database model not found!", 403))
+  } else {
+    await user.update({ email: cfmEmail })
+    res.json("Email changed!")
+  }
+})
+
+exports.doesPasswordCondition = async function (req, res) {
+  if (req.body.password.match(/^[a-zA-Z0-9!@#$%^&*]{8,10}$/)) {
+    res.json(true)
+  } else {
+    res.json(false)
+  }
+}
+
+exports.changePassword = catchAsyncErrors(async function (req, res, next) {
+  const { username, password, cfmpassword } = req.body
+  if (!username || !password || !cfmpassword) {
+    return next(new ErrorHandler("Please fill in all fields", 400))
+  }
+
+  if (password !== cfmpassword) {
+    return next(new ErrorHandler("Passwords do not match", 401))
+  }
+
+  const user = await User.findOne({ where: { username } })
+  if (!user) {
+    return next(new ErrorHandler("Database model not found!", 403))
+  } else {
+    await user.update({ password: cfmpassword })
+    res.json("Password changed!")
+  }
+})
