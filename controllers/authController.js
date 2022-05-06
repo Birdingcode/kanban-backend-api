@@ -6,11 +6,11 @@ const sendToken = require("../utils/jwtToken")
 
 // Register a new user => /register
 exports.registerUser = catchAsyncErrors(async (req, res, next) => {
-  const { username, email, password, privilege } = req.body
+  const { username, oldEmail, password, privilege } = req.body
   console.log(req.body)
   const user = await User.create({
     username,
-    email,
+    email: oldEmail,
     password,
     privilege
   })
@@ -30,6 +30,7 @@ exports.loginUser = catchAsyncErrors(async (req, res, next) => {
 
   // Finding user in database
   const user = await User.findOne({ where: { username } })
+  console.log(user)
 
   if (!user) {
     return next(new ErrorHandler("Invalid Username or Password", 401))
@@ -45,7 +46,13 @@ exports.loginUser = catchAsyncErrors(async (req, res, next) => {
 })
 
 exports.logoutUser = function (req, res) {
-  res.clearCookie("token")
+  console.log("logoutUser")
+  const options = {
+    expires: new Date(Date.now()),
+    httpOnly: true
+  }
+  res.cookie("token", "none", options)
+  res.json("hi")
 }
 
 exports.doesUsernameExist = async function (req, res) {

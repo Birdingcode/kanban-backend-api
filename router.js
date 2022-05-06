@@ -11,7 +11,7 @@ apiRouter.post("/changePassword", auth.isAuthenticateduser, authController.chang
 apiRouter.post("/changeEmail", auth.isAuthenticateduser, authController.changeEmail)
 apiRouter.post("/changeStatus", auth.isAuthenticateduser, userController.changeStatus)
 
-apiRouter.post("/logout", authController.logoutUser)
+apiRouter.get("/logout", authController.logoutUser)
 apiRouter.post("/doesUsernameExist", authController.doesUsernameExist)
 apiRouter.post("/doesEmailExist", authController.doesEmailExist)
 apiRouter.post("/doesPasswordCondition", authController.doesPasswordCondition)
