@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken")
-const User = require("../models/users")
+//const User = require("../models/users")
+const User = require("../models/Db").models.User
 const catchAsyncErrors = require("../middlewares/catchAsyncErrors")
 const ErrorHandler = require("../utils/errorHandler")
 
@@ -13,7 +14,7 @@ exports.isAuthenticateduser = catchAsyncErrors(async (req, res, next) => {
   } else {
     token = req.cookies.token
   }
-
+  console.log(req.cookies.token)
   if (!token) {
     return next(new ErrorHandler("Login first to access this resource.", 401))
   }
@@ -24,11 +25,21 @@ exports.isAuthenticateduser = catchAsyncErrors(async (req, res, next) => {
 })
 
 // handling user roles
-exports.authorizeRoles = (...roles) => {
+// exports.authorizeRoles = (...roles) => {
+//   return (req, res, next) => {
+//     console.log(req.user.role)
+//     if (!roles.includes(req.user.role)) {
+//       return next(new ErrorHandler(`Role(${req.user.role}) is not allowed to access this resource.`), 403)
+//     }
+//     next()
+//   }
+// }
+
+exports.CheckPrivilege = (...privilege) => {
   return (req, res, next) => {
-    console.log(req.user.role)
-    if (!roles.includes(req.user.role)) {
-      return next(new ErrorHandler(`Role(${req.user.role}) is not allowed to access this resource.`), 403)
+    console.log(req.user.privilege)
+    if (!privilege.includes(req.user.role)) {
+      return next(new ErrorHandler(`Privilege(${req.user.privilege}) is not allowed to access this resource.`), 403)
     }
     next()
   }

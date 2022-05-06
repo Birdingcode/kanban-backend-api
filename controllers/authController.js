@@ -1,4 +1,4 @@
-const User = require("../models/Users")
+const User = require("../models/Db").models.User
 const catchAsyncErrors = require("../middlewares/catchAsyncErrors")
 const { request } = require("express")
 const ErrorHandler = require("../utils/errorHandler")
@@ -6,13 +6,13 @@ const sendToken = require("../utils/jwtToken")
 
 // Register a new user => /register
 exports.registerUser = catchAsyncErrors(async (req, res, next) => {
-  const { username, email, password, role } = req.body
+  const { username, email, password, privilege } = req.body
   console.log(req.body)
   const user = await User.create({
     username,
     email,
     password,
-    role
+    privilege
   })
 
   // Create JWT Token
@@ -43,6 +43,10 @@ exports.loginUser = catchAsyncErrors(async (req, res, next) => {
 
   sendToken(user, 200, res)
 })
+
+exports.logoutUser = function (req, res) {
+  res.clearCookie("token")
+}
 
 exports.doesUsernameExist = async function (req, res) {
   const findUser = await User.findOne({ where: { username: req.body.username } })

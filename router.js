@@ -1,9 +1,6 @@
 const apiRouter = require("express").Router()
 const userController = require("./controllers/userController")
 const authController = require("./controllers/authController")
-
-const User = require("./models/Users")
-const db = require("./models/Db")
 const auth = require("./middlewares/auth")
 
 apiRouter.get("/", (req, res) => res.json("Hello, if you see this message that means your backend is up and running successfully. Congrats! Now let's continue learning React!"))
@@ -14,9 +11,12 @@ apiRouter.post("/changePassword", auth.isAuthenticateduser, authController.chang
 apiRouter.post("/changeEmail", auth.isAuthenticateduser, authController.changeEmail)
 apiRouter.post("/changeStatus", auth.isAuthenticateduser, userController.changeStatus)
 
+apiRouter.post("/logout", authController.logoutUser)
 apiRouter.post("/doesUsernameExist", authController.doesUsernameExist)
 apiRouter.post("/doesEmailExist", authController.doesEmailExist)
 apiRouter.post("/doesPasswordCondition", authController.doesPasswordCondition)
 apiRouter.post("/doesNewEmailExist", authController.doesNewEmailExist)
+
+apiRouter.get("/associate", userController.findRoleAll)
 
 module.exports = apiRouter
