@@ -26,7 +26,7 @@ exports.changeStatus = async function (req, res) {
 
 exports.findRoleAll = async function (req, res) {
   try {
-    let usery = await User.findAll({ include: UserGroup })
+    let usery = await User.findAll({ include: [{ model: UserGroup, as: "user_ID" }] })
     console.log(usery)
     res.json(usery)
     //let user = await User.findByPk(7)

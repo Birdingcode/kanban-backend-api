@@ -1,24 +1,15 @@
 const DataTypes = require("sequelize")
-const User = require("./Users.js")
 const Application = require("./Application")
 //console.log(User)
 module.exports = function (db) {
-  const UserGroup = db.define(
-    "UserGroup",
+  const Plan = db.define(
+    "Plan",
     {
-      user_group_app: {
+      Plan_id: {
         type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false,
         primaryKey: true,
         autoIncrement: true
-      },
-      userID: {
-        type: DataTypes.INTEGER.UNSIGNED,
-        allowNull: false,
-        references: {
-          model: User,
-          key: "userID"
-        }
       },
       App_id: {
         type: DataTypes.INTEGER.UNSIGNED,
@@ -28,23 +19,19 @@ module.exports = function (db) {
           key: "App_id"
         }
       },
-      role: {
-        type: DataTypes.STRING,
-        allowNull: false
-      },
-      start_date: {
+      Plan_startDate: {
         type: DataTypes.DATE,
         allowNull: false
       },
-      end_date: {
+      Plan_endDate: {
         type: DataTypes.DATE,
         allowNull: false
       }
     },
     {
-      tableName: "user_group"
+      tableName: "plan"
     }
   )
 
-  return UserGroup
+  return Plan
 }

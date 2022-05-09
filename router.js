@@ -18,5 +18,6 @@ apiRouter.post("/doesPasswordCondition", authController.doesPasswordCondition)
 apiRouter.post("/doesNewEmailExist", authController.doesNewEmailExist)
 
 apiRouter.get("/associate", userController.findRoleAll)
+apiRouter.post("/checkGroup", auth.checkGroup)
 
 module.exports = apiRouter

@@ -7,6 +7,11 @@ const sendToken = require("../utils/jwtToken")
 // Register a new user => /register
 exports.registerUser = catchAsyncErrors(async (req, res, next) => {
   const { username, oldEmail, password, privilege } = req.body
+
+  if (!username || !oldEmail || !password || !privilege) {
+    return next(new ErrorHandler("Please fill in all fields", 400))
+  }
+
   console.log(req.body)
   const user = await User.create({
     username,
@@ -51,8 +56,8 @@ exports.logoutUser = function (req, res) {
     expires: new Date(Date.now()),
     httpOnly: true
   }
-  res.cookie("token", "none", options)
-  res.json("hi")
+  //res.cookie("token", "none", options)
+  //res.json("hi")
 }
 
 exports.doesUsernameExist = async function (req, res) {
@@ -106,7 +111,9 @@ exports.changeEmail = catchAsyncErrors(async function (req, res, next) {
 })
 
 exports.doesPasswordCondition = async function (req, res) {
-  if (req.body.password.match(/^[a-zA-Z0-9!@#$%^&*]{8,10}$/)) {
+  const { password } = req.body
+  var regularExpression = new RegExp(/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{7,11}$/)
+  if (password.match(regularExpression)) {
     res.json(true)
   } else {
     res.json(false)

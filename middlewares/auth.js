@@ -23,13 +23,16 @@ exports.isAuthenticateduser = catchAsyncErrors(async (req, res, next) => {
   next()
 })
 
-exports.checkPrivilege = async function (req, res, next) {
-  console.log(req.body.privilege)
-
-  if (req.body.privilege !== "Superadmin") {
-    return next(new ErrorHandler("You are not authorised to access this page", 406))
+exports.checkGroup = async function (req, res, next) {
+  const { username } = req.body
+  const user = await User.findOne({ where: { username } })
+  if (user.privilege !== "Superadmin") {
+    res.json(false)
+    //return next(new ErrorHandler("You are not authorised to access this page", 406))
+  } else {
+    res.json(true)
   }
-  next()
+  //next()
 }
 // handling user roles
 // exports.authorizeRoles = (...roles) => {

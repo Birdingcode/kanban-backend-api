@@ -1,8 +1,6 @@
 const bcrypt = require("bcryptjs")
 const DataTypes = require("sequelize")
-//const db = require("./Db.js")
 const jwt = require("jsonwebtoken")
-//const UserGroup = require("./UserGroup")
 
 module.exports = function (db) {
   const User = db.define(

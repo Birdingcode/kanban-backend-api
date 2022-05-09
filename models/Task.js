@@ -1,23 +1,22 @@
 const DataTypes = require("sequelize")
-const User = require("./Users.js")
 const Application = require("./Application")
+const Plan = require("./Plan")
 //console.log(User)
 module.exports = function (db) {
-  const UserGroup = db.define(
-    "UserGroup",
+  const Task = db.define(
+    "Task",
     {
-      user_group_app: {
+      Task_id: {
         type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false,
-        primaryKey: true,
-        autoIncrement: true
+        primaryKey: true
       },
-      userID: {
+      Plan_id: {
         type: DataTypes.INTEGER.UNSIGNED,
         allowNull: false,
         references: {
-          model: User,
-          key: "userID"
+          model: Plan,
+          key: "Plan_id"
         }
       },
       App_id: {
@@ -28,23 +27,35 @@ module.exports = function (db) {
           key: "App_id"
         }
       },
-      role: {
+      Task_description: {
         type: DataTypes.STRING,
         allowNull: false
       },
-      start_date: {
-        type: DataTypes.DATE,
+      Task_notes: {
+        type: DataTypes.STRING,
         allowNull: false
       },
-      end_date: {
+      Task_state: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
+      Task_creator: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
+      Task_owner: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
+      Task_createDate: {
         type: DataTypes.DATE,
         allowNull: false
       }
     },
     {
-      tableName: "user_group"
+      tableName: "task"
     }
   )
 
-  return UserGroup
+  return Task
 }
