@@ -26,13 +26,10 @@ exports.changeStatus = async function (req, res) {
 
 exports.findRoleAll = async function (req, res) {
   try {
-    let usery = await User.findAll({ include: [{ model: UserGroup, as: "user_ID" }] })
-    console.log(usery)
+    let usery = await User.findAll({ where: { userID: 7 }, include: [{ model: UserGroup, as: "user_ID" }] })
+
+    //console.log(usery)
     res.json(usery)
-    //let user = await User.findByPk(7)
-    //console.log(user)
-    //usery.setUser(user)
-    //console.log(await usery.getUser())
   } catch (e) {
     res.status(500).send("Sorry, something went wrong.")
     console.log(e)

@@ -1,4 +1,5 @@
 const User = require("../models/Db").models.User
+//const UserGroup = require("../models/").models.UserGroup
 const catchAsyncErrors = require("../middlewares/catchAsyncErrors")
 const { request } = require("express")
 const ErrorHandler = require("../utils/errorHandler")
@@ -6,7 +7,7 @@ const sendToken = require("../utils/jwtToken")
 
 // Register a new user => /register
 exports.registerUser = catchAsyncErrors(async (req, res, next) => {
-  const { username, oldEmail, password, privilege } = req.body
+  const { username, oldEmail, password, privilege, role, start_date } = req.body
 
   if (!username || !oldEmail || !password || !privilege) {
     return next(new ErrorHandler("Please fill in all fields", 400))
