@@ -6,15 +6,10 @@ module.exports = function (db) {
   const User = db.define(
     "User",
     {
-      userID: {
-        type: DataTypes.INTEGER.UNSIGNED,
-        allowNull: false,
-        primaryKey: true,
-        autoIncrement: true
-      },
       username: {
         type: DataTypes.STRING,
         allowNull: false,
+        primaryKey: true,
         unique: true
       },
       password: {
@@ -25,20 +20,10 @@ module.exports = function (db) {
         type: DataTypes.STRING,
         allowNull: false
       },
-      privilege: {
-        type: DataTypes.STRING,
-        allowNull: false
-      },
       status: {
         type: DataTypes.BOOLEAN,
         allowNull: false,
         defaultValue: true
-      },
-      resetPasswordToken: {
-        type: DataTypes.STRING
-      },
-      resetPasswordExpire: {
-        type: DataTypes.DATE
       }
     },
     {
@@ -60,7 +45,7 @@ module.exports = function (db) {
 
   // Return JSON Web Token
   User.prototype.getJwtToken = function () {
-    return jwt.sign({ id: this.userID }, process.env.JWT_SECRET, {
+    return jwt.sign({ id: this.username }, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_EXPIRES_TIME
     })
   }

@@ -19,12 +19,12 @@ module.exports = function (db) {
           key: "Plan_id"
         }
       },
-      App_id: {
-        type: DataTypes.INTEGER.UNSIGNED,
+      App_Acronym: {
+        type: DataTypes.STRING,
         allowNull: false,
         references: {
           model: Application,
-          key: "App_id"
+          key: "App_Acronym"
         }
       },
       Task_description: {

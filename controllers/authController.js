@@ -1,5 +1,6 @@
 const User = require("../models/Db").models.User
-//const UserGroup = require("../models/").models.UserGroup
+const UserGroup = require("../models/Db").models.UserGroup
+const Application = require("../models/Db").models.Application
 const catchAsyncErrors = require("../middlewares/catchAsyncErrors")
 const { request } = require("express")
 const ErrorHandler = require("../utils/errorHandler")
@@ -7,22 +8,56 @@ const sendToken = require("../utils/jwtToken")
 
 // Register a new user => /register
 exports.registerUser = catchAsyncErrors(async (req, res, next) => {
-  const { username, oldEmail, password, privilege, role, start_date } = req.body
+  const { username, oldEmail, password, role } = req.body
 
-  if (!username || !oldEmail || !password || !privilege) {
+  if (!username || !oldEmail || !password || !role) {
     return next(new ErrorHandler("Please fill in all fields", 400))
   }
 
   console.log(req.body)
-  const user = await User.create({
-    username,
-    email: oldEmail,
-    password,
-    privilege
-  })
+  try {
+    const user = await User.create({
+      username,
+      email: oldEmail,
+      password
+    })
+    await UserGroup.create({
+      username,
+      role
+    })
 
-  // Create JWT Token
-  sendToken(user, 200, res)
+    // Create JWT Token
+    sendToken(user, 200, res)
+  } catch (e) {
+    console.log(e)
+  }
+})
+
+// Register a new application => /createApp
+exports.createApp = catchAsyncErrors(async (req, res, next) => {
+  const { App_Acronym, App_Description, App_startDate, App_endDate, App_permit_Open, App_permit_toDoList, App_permit_Doing, App_permit_Done, App_permit_Close, App_permit_Create } = req.body
+  console.log(req.body)
+  if (!App_Acronym || !App_Description || !App_startDate || !App_endDate || !App_permit_Open || !App_permit_toDoList || !App_permit_Doing || !App_permit_Done || !App_permit_Close || !App_permit_Create) {
+    return next(new ErrorHandler("Please fill in all fields", 400))
+  }
+
+  try {
+    await Application.create({
+      App_Acronym,
+      App_Description,
+      App_startDate,
+      App_endDate,
+      App_permit_Open,
+      App_permit_toDoList,
+      App_permit_Doing,
+      App_permit_Done,
+      App_permit_Close,
+      App_permit_Create
+    })
+    res.json("App Created!")
+  } catch (e) {
+    console.log(e)
+  }
 })
 
 // Login user => /login
@@ -57,7 +92,7 @@ exports.logoutUser = function (req, res) {
     expires: new Date(Date.now()),
     httpOnly: true
   }
-  //res.cookie("token", "none", options)
+  res.cookie("token", "none", options)
   //res.json("hi")
 }
 

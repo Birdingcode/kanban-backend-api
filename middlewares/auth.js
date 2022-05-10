@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken")
 //const User = require("../models/users")
 const User = require("../models/Db").models.User
+const UserGroup = require("../models/Db").models.UserGroup
 const catchAsyncErrors = require("../middlewares/catchAsyncErrors")
 const ErrorHandler = require("../utils/errorHandler")
 
@@ -18,39 +19,19 @@ exports.isAuthenticateduser = catchAsyncErrors(async (req, res, next) => {
     return next(new ErrorHandler("Login first to access this resource.", 401))
   }
   const decoded = jwt.verify(token, process.env.JWT_SECRET)
-  req.user = await User.findByPk(decoded.userID)
+  req.user = await User.findByPk(decoded.username)
 
   next()
 })
 
 exports.checkGroup = async function (req, res, next) {
   const { username } = req.body
-  const user = await User.findOne({ where: { username } })
-  if (user.privilege !== "Superadmin") {
-    res.json(false)
-    //return next(new ErrorHandler("You are not authorised to access this page", 406))
-  } else {
-    res.json(true)
-  }
-  //next()
+  console.log(req.body)
+  const user = await User.findOne({ where: { username }, include: [{ model: UserGroup, as: "usergrp" }] })
+  const data = await user.getUsergrp()
+  data.forEach(usergrp => {
+    if (usergrp.dataValues.role === "Superadmin") {
+      res.json(true)
+    }
+  })
 }
-// handling user roles
-// exports.authorizeRoles = (...roles) => {
-//   return (req, res, next) => {
-//     console.log(req.user.role)
-//     if (!roles.includes(req.user.role)) {
-//       return next(new ErrorHandler(`Role(${req.user.role}) is not allowed to access this resource.`), 403)
-//     }
-//     next()
-//   }
-// }
-
-// exports.CheckPrivilege = (...privilege) => {
-//   return (req, res, next) => {
-//     console.log(req.user.privilege)
-//     if (!privilege.includes(req.user.role)) {
-//       return next(new ErrorHandler(`Privilege(${req.user.privilege}) is not allowed to access this resource.`), 403)
-//     }
-//     next()
-//   }
-// }

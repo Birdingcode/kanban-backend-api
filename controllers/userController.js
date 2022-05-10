@@ -1,6 +1,7 @@
 const { Sequelize } = require("../models/Db.js")
 const User = require("../models/Db.js").models.User
 const UserGroup = require("../models/Db").models.UserGroup
+const Application = require("../models/Db").models.Application
 
 exports.getAllUser = async function (req, res) {
   try {
@@ -13,7 +14,7 @@ exports.getAllUser = async function (req, res) {
 
 exports.changeStatus = async function (req, res) {
   try {
-    const findID = await User.findOne({ where: { userID: req.body.userID } })
+    const findID = await User.findOne({ where: { username: req.body.username } })
     if (findID != null) {
       await findID.update({ status: Sequelize.literal("NOT status") })
       let users = await User.findAll()
@@ -26,12 +27,21 @@ exports.changeStatus = async function (req, res) {
 
 exports.findRoleAll = async function (req, res) {
   try {
-    let usery = await User.findAll({ where: { userID: 7 }, include: [{ model: UserGroup, as: "user_ID" }] })
+    let usery = await User.findAll({ where: { username: "test2" }, include: [{ model: UserGroup, as: "usergrp" }] })
 
     //console.log(usery)
     res.json(usery)
   } catch (e) {
     res.status(500).send("Sorry, something went wrong.")
     console.log(e)
+  }
+}
+
+exports.getApp = async function (req, res) {
+  try {
+    let app = await Application.findAll()
+    res.json(app)
+  } catch (e) {
+    res.status(500).send(e)
   }
 }

@@ -11,12 +11,12 @@ module.exports = function (db) {
         primaryKey: true,
         autoIncrement: true
       },
-      App_id: {
-        type: DataTypes.INTEGER.UNSIGNED,
+      App_Acronym: {
+        type: DataTypes.STRING,
         allowNull: false,
         references: {
           model: Application,
-          key: "App_id"
+          key: "App_Acronym"
         }
       },
       Plan_startDate: {

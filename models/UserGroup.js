@@ -12,32 +12,25 @@ module.exports = function (db) {
         primaryKey: true,
         autoIncrement: true
       },
-      userID: {
-        type: DataTypes.INTEGER.UNSIGNED,
+      username: {
+        type: DataTypes.STRING,
         allowNull: false,
+        unique: true,
         references: {
           model: User,
-          key: "userID"
+          key: "username"
         }
       },
-      App_id: {
-        type: DataTypes.INTEGER.UNSIGNED,
-        allowNull: false,
+      App_Acronym: {
+        type: DataTypes.STRING,
+        allowNull: true,
         references: {
           model: Application,
-          key: "App_id"
+          key: "App_Acronym"
         }
       },
       role: {
         type: DataTypes.STRING,
-        allowNull: false
-      },
-      start_date: {
-        type: DataTypes.DATE,
-        allowNull: false
-      },
-      end_date: {
-        type: DataTypes.DATE,
         allowNull: false
       }
     },

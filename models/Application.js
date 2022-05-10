@@ -4,19 +4,19 @@ module.exports = function (db) {
   const Application = db.define(
     "Application",
     {
-      App_id: {
-        type: DataTypes.INTEGER.UNSIGNED,
+      App_Acronym: {
+        type: DataTypes.STRING,
         allowNull: false,
-        primaryKey: true,
-        autoIncrement: true
+        primaryKey: true
       },
       App_Description: {
         type: DataTypes.STRING,
         allowNull: false
       },
-      Rnumber: {
+      App_Rnumber: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
+        defaultValue: 1
       },
       App_startDate: {
         type: DataTypes.DATE,
@@ -27,19 +27,23 @@ module.exports = function (db) {
         allowNull: false
       },
       App_permit_Open: {
-        type: DataTypes.BOOLEAN,
+        type: DataTypes.STRING,
         allowNull: false
       },
       App_permit_toDoList: {
-        type: DataTypes.BOOLEAN,
+        type: DataTypes.STRING,
         allowNull: false
       },
       App_permit_Doing: {
-        type: DataTypes.BOOLEAN,
+        type: DataTypes.STRING,
         allowNull: false
       },
       App_permit_Done: {
-        type: DataTypes.BOOLEAN,
+        type: DataTypes.STRING,
+        allowNull: false
+      },
+      App_permit_Close: {
+        type: DataTypes.STRING,
         allowNull: false
       },
       App_permit_Create: {
@@ -48,7 +52,8 @@ module.exports = function (db) {
       }
     },
     {
-      tableName: "application"
+      tableName: "application",
+      timestamps: false
     }
   )
 
