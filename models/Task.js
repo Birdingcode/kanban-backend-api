@@ -7,16 +7,20 @@ module.exports = function (db) {
     "Task",
     {
       Task_id: {
-        type: DataTypes.INTEGER.UNSIGNED,
+        type: DataTypes.STRING,
         allowNull: false,
         primaryKey: true
       },
-      Plan_id: {
-        type: DataTypes.INTEGER.UNSIGNED,
+      Task_name: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
+      Plan_name: {
+        type: DataTypes.STRING,
         allowNull: false,
         references: {
           model: Plan,
-          key: "Plan_id"
+          key: "Plan_name"
         }
       },
       App_Acronym: {
@@ -37,7 +41,8 @@ module.exports = function (db) {
       },
       Task_state: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        defaultValue: "Open"
       },
       Task_creator: {
         type: DataTypes.STRING,
@@ -53,6 +58,7 @@ module.exports = function (db) {
       }
     },
     {
+      timestamps: false,
       tableName: "task"
     }
   )

@@ -14,7 +14,12 @@ apiRouter.post("/changeEmail", auth.isAuthenticateduser, authController.changeEm
 apiRouter.post("/changeStatus", auth.isAuthenticateduser, userController.changeStatus)
 
 apiRouter.post("/createApp", auth.isAuthenticateduser, authController.createApp)
+apiRouter.post("/createPlan", auth.isAuthenticateduser, authController.createPlan)
+apiRouter.post("/createTask", auth.isAuthenticateduser, authController.createTask)
 apiRouter.get("/getApp", auth.isAuthenticateduser, userController.getApp)
+apiRouter.get("/getPlan", auth.isAuthenticateduser, userController.getPlan)
+
+//apiRouter.get("/project/:App_Acronym")
 
 apiRouter.post("/doesUsernameExist", authController.doesUsernameExist)
 apiRouter.post("/doesEmailExist", authController.doesEmailExist)

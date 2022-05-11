@@ -27,7 +27,7 @@ Application.hasMany(Plan, { as: "appPlan", foreignKey: "App_Acronym" })
 Task.belongsTo(Application, { as: "appTask", foreignKey: "App_Acronym" })
 Application.hasMany(Task, { as: "appTask", foreignKey: "App_Acronym" })
 
-Task.belongsTo(Plan, { as: "planTask", foreignKey: "Plan_id" })
-Plan.hasMany(Task, { as: "planTask", foreignKey: "Plan_id" })
+Task.belongsTo(Plan, { as: "planTask", foreignKey: "Plan_name" })
+Plan.hasMany(Task, { as: "planTask", foreignKey: "Plan_name" })
 
 module.exports = db

@@ -5,11 +5,10 @@ module.exports = function (db) {
   const Plan = db.define(
     "Plan",
     {
-      Plan_id: {
-        type: DataTypes.INTEGER.UNSIGNED,
+      Plan_name: {
+        type: DataTypes.STRING,
         allowNull: false,
-        primaryKey: true,
-        autoIncrement: true
+        primaryKey: true
       },
       App_Acronym: {
         type: DataTypes.STRING,
@@ -29,6 +28,7 @@ module.exports = function (db) {
       }
     },
     {
+      timestamps: false,
       tableName: "plan"
     }
   )

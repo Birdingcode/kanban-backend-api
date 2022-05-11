@@ -1,6 +1,8 @@
 const User = require("../models/Db").models.User
 const UserGroup = require("../models/Db").models.UserGroup
 const Application = require("../models/Db").models.Application
+const Plan = require("../models/Db").models.Plan
+const Task = require("../models/Db").models.Task
 const catchAsyncErrors = require("../middlewares/catchAsyncErrors")
 const { request } = require("express")
 const ErrorHandler = require("../utils/errorHandler")
@@ -55,6 +57,58 @@ exports.createApp = catchAsyncErrors(async (req, res, next) => {
       App_permit_Create
     })
     res.json("App Created!")
+  } catch (e) {
+    console.log(e)
+  }
+})
+
+exports.createPlan = catchAsyncErrors(async (req, res, next) => {
+  const { Plan_name, App_Acronym, Plan_startDate, Plan_endDate } = req.body
+  console.log(req.body)
+  if (!Plan_name || !App_Acronym || !Plan_startDate || !Plan_endDate) {
+    console.log(Plan_name)
+    console.log(Plan_startDate)
+    console.log(Plan_endDate)
+    console.log(App_Acronym)
+    return next(new ErrorHandler("Please fill in all fields", 400))
+  }
+
+  try {
+    await Plan.create({
+      Plan_name,
+      App_Acronym,
+      Plan_startDate,
+      Plan_endDate
+    })
+    res.json("Plan Created!")
+  } catch (e) {
+    console.log(e)
+  }
+})
+
+exports.createTask = catchAsyncErrors(async (req, res, next) => {
+  const { Task_name, Plan_name, App_Acronym, Task_description, Task_notes, Task_creator, Task_owner, Task_createDate } = req.body
+  console.log(req.body)
+  if (!Task_name || !Plan_name || !App_Acronym || !Task_description || !Task_notes || !Task_creator || !Task_owner || !Task_createDate) {
+    return next(new ErrorHandler("Please fill in all fields", 400))
+  }
+
+  let rnum = await Application.findOne({ where: { App_Acronym } })
+  let taskid = App_Acronym.concat("_", rnum.App_Rnumber)
+  try {
+    await Task.create({
+      Task_id: taskid,
+      Task_name,
+      Plan_name,
+      App_Acronym,
+      Task_description,
+      Task_notes,
+      Task_creator,
+      Task_owner,
+      Task_createDate
+    })
+    await rnum.update({ App_Rnumber: rnum.App_Rnumber + 1 })
+    res.json("Plan Created!")
   } catch (e) {
     console.log(e)
   }

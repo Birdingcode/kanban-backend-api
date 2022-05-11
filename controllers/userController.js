@@ -2,6 +2,7 @@ const { Sequelize } = require("../models/Db.js")
 const User = require("../models/Db.js").models.User
 const UserGroup = require("../models/Db").models.UserGroup
 const Application = require("../models/Db").models.Application
+const Plan = require("../models/Db.js").models.Plan
 
 exports.getAllUser = async function (req, res) {
   try {
@@ -41,6 +42,15 @@ exports.getApp = async function (req, res) {
   try {
     let app = await Application.findAll()
     res.json(app)
+  } catch (e) {
+    res.status(500).send(e)
+  }
+}
+
+exports.getPlan = async function (req, res) {
+  try {
+    let plan = await Plan.findAll()
+    res.json(plan)
   } catch (e) {
     res.status(500).send(e)
   }
