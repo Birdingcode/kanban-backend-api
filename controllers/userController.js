@@ -3,6 +3,7 @@ const User = require("../models/Db.js").models.User
 const UserGroup = require("../models/Db").models.UserGroup
 const Application = require("../models/Db").models.Application
 const Plan = require("../models/Db.js").models.Plan
+const Task = require("../models/Db.js").models.Task
 
 exports.getAllUser = async function (req, res) {
   try {
@@ -51,6 +52,17 @@ exports.getPlan = async function (req, res) {
   try {
     let plan = await Plan.findAll()
     res.json(plan)
+  } catch (e) {
+    res.status(500).send(e)
+  }
+}
+
+exports.getTask = async function (req, res) {
+  try {
+    const { App_Acronym } = req.query
+    console.log(req.query)
+    let task = await Task.findAll({ where: { App_Acronym } })
+    res.json(task)
   } catch (e) {
     res.status(500).send(e)
   }

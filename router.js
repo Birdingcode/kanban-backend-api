@@ -18,7 +18,7 @@ apiRouter.post("/createPlan", auth.isAuthenticateduser, authController.createPla
 apiRouter.post("/createTask", auth.isAuthenticateduser, authController.createTask)
 apiRouter.get("/getApp", auth.isAuthenticateduser, userController.getApp)
 apiRouter.get("/getPlan", auth.isAuthenticateduser, userController.getPlan)
-
+apiRouter.get("/getTask", auth.isAuthenticateduser, userController.getTask)
 //apiRouter.get("/project/:App_Acronym")
 
 apiRouter.post("/doesUsernameExist", authController.doesUsernameExist)
