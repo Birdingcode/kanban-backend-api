@@ -15,7 +15,6 @@ module.exports = function (db) {
       username: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true,
         references: {
           model: User,
           key: "username"

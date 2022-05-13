@@ -7,7 +7,7 @@ const Task = require("../models/Db.js").models.Task
 
 exports.getAllUser = async function (req, res) {
   try {
-    let users = await User.findAll()
+    let users = await User.findAll({ include: [{ model: UserGroup, as: "usergrp" }] })
     res.json(users)
   } catch (e) {
     res.status(500).send(e)
@@ -16,10 +16,10 @@ exports.getAllUser = async function (req, res) {
 
 exports.changeStatus = async function (req, res) {
   try {
-    const findID = await User.findOne({ where: { username: req.body.username } })
+    const findID = await User.findOne({ where: { username: req.body.username }, include: [{ model: UserGroup, as: "usergrp" }] })
     if (findID != null) {
       await findID.update({ status: Sequelize.literal("NOT status") })
-      let users = await User.findAll()
+      let users = await User.findAll({ include: [{ model: UserGroup, as: "usergrp" }] })
       res.json(users)
     }
   } catch (e) {

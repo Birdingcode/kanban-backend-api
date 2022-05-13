@@ -10,9 +10,9 @@ const sendToken = require("../utils/jwtToken")
 
 // Register a new user => /register
 exports.registerUser = catchAsyncErrors(async (req, res, next) => {
-  const { username, oldEmail, password, role } = req.body
+  const { username, oldEmail, password, App_Acronym, role } = req.body
 
-  if (!username || !oldEmail || !password || !role) {
+  if (!username || !oldEmail || !password || !App_Acronym || !role) {
     return next(new ErrorHandler("Please fill in all fields", 400))
   }
 
@@ -23,10 +23,13 @@ exports.registerUser = catchAsyncErrors(async (req, res, next) => {
       email: oldEmail,
       password
     })
-    await UserGroup.create({
-      username,
-      role
-    })
+    for (let i = 0; i < role.length; i++) {
+      await UserGroup.create({
+        username,
+        App_Acronym,
+        role: role[i]
+      })
+    }
 
     // Create JWT Token
     sendToken(user, 200, res)
