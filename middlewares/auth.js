@@ -2,6 +2,7 @@ const jwt = require("jsonwebtoken")
 //const User = require("../models/users")
 const User = require("../models/Db").models.User
 const UserGroup = require("../models/Db").models.UserGroup
+const GroupName = require("../models/Db").models.GroupName
 const catchAsyncErrors = require("../middlewares/catchAsyncErrors")
 const ErrorHandler = require("../utils/errorHandler")
 
@@ -26,9 +27,13 @@ exports.isAuthenticateduser = catchAsyncErrors(async (req, res, next) => {
 
 exports.checkGroup = async function (req, res, next) {
   const { username } = req.body
-  console.log(req.body)
-  const user = await User.findOne({ where: { username }, include: [{ model: UserGroup, as: "usergrp" }] })
+  //console.log(req.body)
+  const user = await User.findOne({
+    where: { username },
+    include: [{ model: UserGroup, as: "usergrp" }]
+  })
   const data = await user.getUsergrp()
+
   data.forEach(usergrp => {
     if (usergrp.dataValues.role === "Superadmin") {
       res.json(true)

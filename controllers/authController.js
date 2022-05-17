@@ -3,6 +3,7 @@ const UserGroup = require("../models/Db").models.UserGroup
 const Application = require("../models/Db").models.Application
 const Plan = require("../models/Db").models.Plan
 const Task = require("../models/Db").models.Task
+const GroupName = require("../models/Db").models.GroupName
 const catchAsyncErrors = require("../middlewares/catchAsyncErrors")
 const { request } = require("express")
 const ErrorHandler = require("../utils/errorHandler")
@@ -10,9 +11,8 @@ const sendToken = require("../utils/jwtToken")
 
 // Register a new user => /register
 exports.registerUser = catchAsyncErrors(async (req, res, next) => {
-  const { username, oldEmail, password, App_Acronym, role } = req.body
-
-  if (!username || !oldEmail || !password || !App_Acronym || !role) {
+  const { username, oldEmail, password, role } = req.body
+  if (!username || !oldEmail || !password || !role) {
     return next(new ErrorHandler("Please fill in all fields", 400))
   }
 
@@ -23,11 +23,12 @@ exports.registerUser = catchAsyncErrors(async (req, res, next) => {
       email: oldEmail,
       password
     })
+
     for (let i = 0; i < role.length; i++) {
       await UserGroup.create({
         username,
-        App_Acronym,
-        role: role[i]
+        App_Acronym: role[i].slice(0, 3),
+        role: role[i].slice(6)
       })
     }
 
@@ -84,6 +85,23 @@ exports.createPlan = catchAsyncErrors(async (req, res, next) => {
       Plan_endDate
     })
     res.json("Plan Created!")
+  } catch (e) {
+    console.log(e)
+  }
+})
+
+exports.createGroup = catchAsyncErrors(async (req, res, next) => {
+  const { role } = req.body
+  console.log(req.body)
+  if (!role) {
+    return next(new ErrorHandler("Please fill in all fields", 400))
+  }
+
+  try {
+    await GroupName.create({
+      role
+    })
+    res.json("Group Created!")
   } catch (e) {
     console.log(e)
   }
@@ -229,5 +247,67 @@ exports.changePassword = catchAsyncErrors(async function (req, res, next) {
   } else {
     await user.update({ password: cfmpassword })
     res.json("Password changed!")
+  }
+})
+
+exports.editApp = catchAsyncErrors(async function (req, res, next) {
+  const { App_Acronym, App_Description, App_startDate, App_endDate, App_permit_Open, App_permit_toDoList, App_permit_Doing, App_permit_Done, App_permit_Close, App_permit_Create } = req.body
+  console.log(req.body)
+  if (!App_Acronym || !App_Description || !App_startDate || !App_endDate || !App_permit_Open || !App_permit_toDoList || !App_permit_Doing || !App_permit_Done || !App_permit_Close || !App_permit_Create) {
+    return next(new ErrorHandler("Please fill in all fields", 400))
+  }
+
+  const app = await Application.findOne({ where: { App_Acronym } })
+  console.log(app)
+  try {
+    if (!app) {
+      return next(new ErrorHandler("Database model not found!", 403))
+    } else {
+      await Application.update(
+        {
+          App_Acronym: App_Acronym,
+          App_Description: App_Description,
+          App_startDate: App_startDate,
+          App_endDate: App_endDate,
+          App_permit_Open: App_permit_Open,
+          App_permit_toDoList: App_permit_toDoList,
+          App_permit_Doing: App_permit_Doing,
+          App_permit_Done: App_permit_Done,
+          App_permit_Close: App_permit_Close,
+          App_permit_Create: App_permit_Create
+        },
+        { where: { App_Acronym } }
+      )
+      res.json("App updated!")
+    }
+  } catch (e) {
+    console.log(e)
+  }
+})
+
+exports.editPlan = catchAsyncErrors(async function (req, res, next) {
+  const { Plan_name, App_Acronym, Plan_startDate, Plan_endDate } = req.body
+  console.log(req.body)
+  if (!Plan_name || !App_Acronym || !Plan_startDate || !Plan_endDate) {
+    return next(new ErrorHandler("Please fill in all fields", 400))
+  }
+
+  const plan = await Plan.findOne({ where: { App_Acronym: App_Acronym, Plan_name: Plan_name } })
+  console.log(plan)
+  try {
+    if (!plan) {
+      return next(new ErrorHandler("Database model not found!", 403))
+    } else {
+      await Plan.update(
+        {
+          Plan_startDate: Plan_startDate,
+          Plan_endDate: Plan_endDate
+        },
+        { where: { App_Acronym: App_Acronym, Plan_name: Plan_name } }
+      )
+      res.json("Plan updated!")
+    }
+  } catch (e) {
+    console.log(e)
   }
 })

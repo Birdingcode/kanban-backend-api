@@ -1,6 +1,7 @@
 const DataTypes = require("sequelize")
 const User = require("./Users.js")
 const Application = require("./Application")
+const GroupName = require("./GroupName")
 //console.log(User)
 module.exports = function (db) {
   const UserGroup = db.define(
@@ -30,7 +31,11 @@ module.exports = function (db) {
       },
       role: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
+        references: {
+          model: GroupName,
+          key: "role"
+        }
       }
     },
     {
