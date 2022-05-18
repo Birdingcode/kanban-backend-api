@@ -41,9 +41,9 @@ exports.registerUser = catchAsyncErrors(async (req, res, next) => {
 
 // Register a new application => /createApp
 exports.createApp = catchAsyncErrors(async (req, res, next) => {
-  const { App_Acronym, App_Description, App_startDate, App_endDate, App_permit_Open, App_permit_toDoList, App_permit_Doing, App_permit_Done, App_permit_Close, App_permit_Create } = req.body
+  const { App_Acronym, App_Description, App_startDate, App_endDate, App_permit_Open, App_permit_toDoList, App_permit_Doing, App_permit_Done, App_permit_Create } = req.body
   console.log(req.body)
-  if (!App_Acronym || !App_Description || !App_startDate || !App_endDate || !App_permit_Open || !App_permit_toDoList || !App_permit_Doing || !App_permit_Done || !App_permit_Close || !App_permit_Create) {
+  if (!App_Acronym || !App_Description || !App_startDate || !App_endDate || !App_permit_Open || !App_permit_toDoList || !App_permit_Doing || !App_permit_Done || !App_permit_Create) {
     return next(new ErrorHandler("Please fill in all fields", 400))
   }
 
@@ -57,7 +57,7 @@ exports.createApp = catchAsyncErrors(async (req, res, next) => {
       App_permit_toDoList,
       App_permit_Doing,
       App_permit_Done,
-      App_permit_Close,
+
       App_permit_Create
     })
     res.json("App Created!")
@@ -251,9 +251,9 @@ exports.changePassword = catchAsyncErrors(async function (req, res, next) {
 })
 
 exports.editApp = catchAsyncErrors(async function (req, res, next) {
-  const { App_Acronym, App_Description, App_startDate, App_endDate, App_permit_Open, App_permit_toDoList, App_permit_Doing, App_permit_Done, App_permit_Close, App_permit_Create } = req.body
+  const { App_Acronym, App_Description, App_startDate, App_endDate, App_permit_Open, App_permit_toDoList, App_permit_Doing, App_permit_Done, App_permit_Create } = req.body
   console.log(req.body)
-  if (!App_Acronym || !App_Description || !App_startDate || !App_endDate || !App_permit_Open || !App_permit_toDoList || !App_permit_Doing || !App_permit_Done || !App_permit_Close || !App_permit_Create) {
+  if (!App_Acronym || !App_Description || !App_startDate || !App_endDate || !App_permit_Open || !App_permit_toDoList || !App_permit_Doing || !App_permit_Done || !App_permit_Create) {
     return next(new ErrorHandler("Please fill in all fields", 400))
   }
 
@@ -265,7 +265,6 @@ exports.editApp = catchAsyncErrors(async function (req, res, next) {
     } else {
       await Application.update(
         {
-          App_Acronym: App_Acronym,
           App_Description: App_Description,
           App_startDate: App_startDate,
           App_endDate: App_endDate,
@@ -273,7 +272,6 @@ exports.editApp = catchAsyncErrors(async function (req, res, next) {
           App_permit_toDoList: App_permit_toDoList,
           App_permit_Doing: App_permit_Doing,
           App_permit_Done: App_permit_Done,
-          App_permit_Close: App_permit_Close,
           App_permit_Create: App_permit_Create
         },
         { where: { App_Acronym } }

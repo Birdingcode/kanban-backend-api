@@ -26,14 +26,14 @@ apiRouter.get("/getSpecificPlan", auth.isAuthenticateduser, userController.getSp
 apiRouter.get("/getSpecificPlanE", auth.isAuthenticateduser, userController.getSpecificPlanE)
 apiRouter.get("/getTask", auth.isAuthenticateduser, userController.getTask)
 apiRouter.get("/getGroupApp", auth.isAuthenticateduser, userController.getGroupApp)
-//apiRouter.get("/project/:App_Acronym")
 
 apiRouter.post("/doesUsernameExist", authController.doesUsernameExist)
 apiRouter.post("/doesEmailExist", authController.doesEmailExist)
 apiRouter.post("/doesPasswordCondition", authController.doesPasswordCondition)
 apiRouter.post("/doesNewEmailExist", authController.doesNewEmailExist)
 
-apiRouter.get("/associate", userController.findRoleAll)
-apiRouter.post("/checkGroup", auth.checkGroup)
+apiRouter.post("/checkGroup", auth.isAuthenticateduser, auth.checkGroup)
+apiRouter.post("/checkGroupBack", auth.isAuthenticateduser, auth.checkGroupBack)
+apiRouter.post("/checkGroupAPM", auth.isAuthenticateduser, auth.checkGroupAPM)
 
 module.exports = apiRouter

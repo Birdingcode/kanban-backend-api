@@ -30,18 +30,6 @@ exports.changeStatus = async function (req, res) {
   }
 }
 
-exports.findRoleAll = async function (req, res) {
-  try {
-    let usery = await User.findAll({ where: { username: "test2" }, include: [{ model: UserGroup, as: "usergrp" }] })
-
-    //console.log(usery)
-    res.json(usery)
-  } catch (e) {
-    res.status(500).send("Sorry, something went wrong.")
-    console.log(e)
-  }
-}
-
 exports.getApp = async function (req, res) {
   try {
     let app = await Application.findAll()

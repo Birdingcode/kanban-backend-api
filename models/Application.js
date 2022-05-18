@@ -42,10 +42,6 @@ module.exports = function (db) {
         type: DataTypes.STRING,
         allowNull: false
       },
-      App_permit_Close: {
-        type: DataTypes.STRING,
-        allowNull: false
-      },
       App_permit_Create: {
         type: DataTypes.STRING,
         allowNull: false
