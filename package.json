@@ -22,6 +22,7 @@
     "md5": "^2.3.0",
     "mongodb": "^3.6.3",
     "mysql2": "^2.3.3",
+    "nodemailer": "^6.7.5",
     "sanitize-html": "^2.3.0",
     "sequelize": "^6.19.0",
     "validator": "^13.5.2"
