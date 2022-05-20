@@ -108,7 +108,8 @@ exports.createGroup = catchAsyncErrors(async (req, res, next) => {
 })
 
 exports.createTask = catchAsyncErrors(async (req, res, next) => {
-  const { Task_name, Plan_name, App_Acronym, Task_description, Task_notes, Task_creator, Task_owner, Task_createDate } = req.body
+  const { Task_name, Plan_name, Task_description, Task_notes, Task_creator, Task_owner, Task_createDate } = req.body
+  const { App_Acronym } = req.query
   console.log(req.body)
   if (!Task_name || !Plan_name || !App_Acronym || !Task_description || !Task_notes || !Task_creator || !Task_owner || !Task_createDate) {
     return next(new ErrorHandler("Please fill in all fields", 400))
@@ -117,19 +118,21 @@ exports.createTask = catchAsyncErrors(async (req, res, next) => {
   let rnum = await Application.findOne({ where: { App_Acronym } })
   let taskid = App_Acronym.concat("_", rnum.App_Rnumber)
   try {
-    await Task.create({
-      Task_id: taskid,
-      Task_name,
-      Plan_name,
-      App_Acronym,
-      Task_description,
-      Task_notes,
-      Task_creator,
-      Task_owner,
-      Task_createDate
-    })
+    if (Plan_name === "N/A" || Task_owner === "N/A") {
+      await Task.create({
+        Task_id: taskid,
+        Task_name,
+        Plan_name: null,
+        App_Acronym,
+        Task_description,
+        Task_notes,
+        Task_creator,
+        Task_owner: null,
+        Task_createDate
+      })
+    }
     await rnum.update({ App_Rnumber: rnum.App_Rnumber + 1 })
-    res.json("Plan Created!")
+    res.json("Task Created!")
   } catch (e) {
     console.log(e)
   }
@@ -305,6 +308,27 @@ exports.editPlan = catchAsyncErrors(async function (req, res, next) {
       )
       res.json("Plan updated!")
     }
+  } catch (e) {
+    console.log(e)
+  }
+})
+
+exports.editGroup = catchAsyncErrors(async function (req, res, next) {
+  const { username, role } = req.body
+  //console.log(req.body)
+  //const oldUser = await UserGroup.findAll({ where: { username } })
+  const oldGroup = await UserGroup.destroy({ where: { username } })
+  //console.log(oldGroup)
+
+  try {
+    for (let i = 0; i < role.length; i++) {
+      const usery = await UserGroup.create({
+        username,
+        App_Acronym: role[i].slice(0, 3),
+        role: role[i].slice(6)
+      })
+    }
+    res.json("Group Updated")
   } catch (e) {
     console.log(e)
   }

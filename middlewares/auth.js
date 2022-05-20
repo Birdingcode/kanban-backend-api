@@ -50,6 +50,26 @@ exports.checkGroupAPM = async function (req, res, next) {
   }
 }
 
+exports.checkCreate = async function (req, res, next) {
+  const { username } = req.body
+  const { App_Acronym } = req.query
+  const user = await UserGroup.findAll({
+    where: { username, App_Acronym }
+  })
+  console.log(user)
+  const app = await Application.findOne({ where: { App_Acronym } })
+  console.log(app.dataValues.App_permit_Create)
+
+  let success = false
+  user.forEach(user => {
+    if (user.dataValues.role === app.dataValues.App_permit_Create) {
+      success = true
+    }
+  })
+
+  res.json(success)
+}
+
 exports.checkGroup = async function (req, res, next) {
   let permission = ""
   const { username, sourceID, Task_id } = req.body

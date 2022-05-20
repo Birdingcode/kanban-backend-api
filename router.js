@@ -19,13 +19,16 @@ apiRouter.post("/createPlan", auth.isAuthenticateduser, authController.createPla
 apiRouter.post("/createTask", auth.isAuthenticateduser, authController.createTask)
 apiRouter.post("/editApp", auth.isAuthenticateduser, authController.editApp)
 apiRouter.post("/editPlan", auth.isAuthenticateduser, authController.editPlan)
+apiRouter.post("/editGroup", auth.isAuthenticateduser, authController.editGroup)
 apiRouter.get("/getApp", auth.isAuthenticateduser, userController.getApp)
 apiRouter.get("/getSpecificApp", auth.isAuthenticateduser, userController.getSpecificApp)
 apiRouter.get("/getPlan", auth.isAuthenticateduser, userController.getPlan)
 apiRouter.get("/getSpecificPlan", auth.isAuthenticateduser, userController.getSpecificPlan)
 apiRouter.get("/getSpecificPlanE", auth.isAuthenticateduser, userController.getSpecificPlanE)
 apiRouter.get("/getTask", auth.isAuthenticateduser, userController.getTask)
+apiRouter.get("/getSpecificTask", auth.isAuthenticateduser, userController.getSpecificTask)
 apiRouter.get("/getGroupApp", auth.isAuthenticateduser, userController.getGroupApp)
+apiRouter.get("/getCurrGroup", auth.isAuthenticateduser, userController.getCurrGroup)
 
 apiRouter.post("/doesUsernameExist", authController.doesUsernameExist)
 apiRouter.post("/doesEmailExist", authController.doesEmailExist)
@@ -35,5 +38,6 @@ apiRouter.post("/doesNewEmailExist", authController.doesNewEmailExist)
 apiRouter.post("/checkGroup", auth.isAuthenticateduser, auth.checkGroup)
 apiRouter.post("/checkGroupBack", auth.isAuthenticateduser, auth.checkGroupBack)
 apiRouter.post("/checkGroupAPM", auth.isAuthenticateduser, auth.checkGroupAPM)
+apiRouter.post("/checkCreate", auth.isAuthenticateduser, auth.checkCreate)
 
 module.exports = apiRouter

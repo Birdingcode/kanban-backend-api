@@ -17,7 +17,6 @@ module.exports = function (db) {
       },
       Plan_name: {
         type: DataTypes.STRING,
-        allowNull: false,
         references: {
           model: Plan,
           key: "Plan_name"
@@ -49,8 +48,7 @@ module.exports = function (db) {
         allowNull: false
       },
       Task_owner: {
-        type: DataTypes.STRING,
-        allowNull: false
+        type: DataTypes.STRING
       },
       Task_createDate: {
         type: DataTypes.DATE,

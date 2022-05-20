@@ -89,6 +89,17 @@ exports.getTask = async function (req, res) {
   }
 }
 
+exports.getSpecificTask = async function (req, res) {
+  try {
+    const { Task_id } = req.query
+    console.log(Task_id)
+    let task = await Task.findAll({ where: { Task_id } })
+    res.json(task)
+  } catch (e) {
+    res.status(500).send(e)
+  }
+}
+
 exports.getGroupApp = async function (req, res) {
   //let concatRG = ""
   let concatRGArray = []
@@ -105,6 +116,28 @@ exports.getGroupApp = async function (req, res) {
         // concatRG += app[k].dataValues.App_Acronym.concat(" - ", role[i].dataValues.role)
         concatRGArray.push(JSONconcat)
       }
+    }
+
+    await res.json(concatRGArray)
+    console.log(concatRGArray)
+  } catch (e) {
+    res.status(500).send(e)
+  }
+}
+
+exports.getCurrGroup = async function (req, res) {
+  const { username } = req.query
+  let concatRGArray = []
+
+  try {
+    let currGroup = await UserGroup.findAll({ where: { username } })
+
+    //console.log(currGroup)
+
+    for (let i = 0; i < currGroup.length; i++) {
+      let JSONconcat = { appAcronym: currGroup[i].dataValues.App_Acronym, role: currGroup[i].dataValues.role }
+      // concatRG += app[k].dataValues.App_Acronym.concat(" - ", role[i].dataValues.role)
+      concatRGArray.push(JSONconcat)
     }
 
     await res.json(concatRGArray)
