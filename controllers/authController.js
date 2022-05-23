@@ -294,7 +294,7 @@ exports.editPlan = catchAsyncErrors(async function (req, res, next) {
   }
 
   const plan = await Plan.findOne({ where: { App_Acronym: App_Acronym, Plan_name: Plan_name } })
-  console.log(plan)
+  //console.log(plan)
   try {
     if (!plan) {
       return next(new ErrorHandler("Database model not found!", 403))
@@ -332,4 +332,83 @@ exports.editGroup = catchAsyncErrors(async function (req, res, next) {
   } catch (e) {
     console.log(e)
   }
+})
+
+exports.changeTaskPlanName = catchAsyncErrors(async function (req, res, next) {
+  const { Task_id, Plan_name } = req.body
+  if (!Plan_name) {
+    return next(new ErrorHandler("Please fill in all fields", 400))
+  }
+
+  const task = await Task.findOne({ where: { Task_id } })
+  if (!task) {
+    return next(new ErrorHandler("Database model not found!", 403))
+  } else {
+    await task.update({ Plan_name: Plan_name })
+    res.json("Plan Name changed!")
+  }
+})
+
+exports.changeTaskDesc = catchAsyncErrors(async function (req, res, next) {
+  const { Task_id, Task_description } = req.body
+  if (!Task_description) {
+    return next(new ErrorHandler("Please fill in all fields", 400))
+  }
+
+  const task = await Task.findOne({ where: { Task_id } })
+  if (!task) {
+    return next(new ErrorHandler("Database model not found!", 403))
+  } else {
+    await task.update({ Task_description: Task_description })
+    res.json("Task Desc changed!")
+  }
+})
+
+exports.changeTaskOwner = catchAsyncErrors(async function (req, res, next) {
+  const { Task_id, Task_owner } = req.body
+  if (!Task_owner) {
+    return next(new ErrorHandler("Please fill in all fields", 400))
+  }
+
+  const task = await Task.findOne({ where: { Task_id } })
+  if (!task) {
+    return next(new ErrorHandler("Database model not found!", 403))
+  } else {
+    await task.update({ Task_owner: Task_owner })
+    res.json("Task owner changed!")
+  }
+})
+
+exports.changeTaskNotes = catchAsyncErrors(async function (req, res, next) {
+  const { Task_id, Task_notes, username } = req.body
+  console.log(username)
+  if (!Task_notes) {
+    return next(new ErrorHandler("Please fill in all fields", 400))
+  }
+  const currentDateTime = new Date().toLocaleString()
+  //const currentTime = new Date().toLocaleTimeString()
+  const task = await Task.findOne({ where: { Task_id } })
+  let newNotes = { username, Task_notes, currentDateTime }
+  // let parseNotes = JSON.parse(newNotes)
+
+  if (task.Task_notes === null) {
+    await task.update({ Task_notes: JSON.stringify([newNotes]) })
+    res.json("Task Notes Updated! 1")
+  } else {
+    let addedNotes = JSON.parse(task.Task_notes)
+    console.log(addedNotes)
+    addedNotes.push(newNotes)
+    await task.update({ Task_notes: JSON.stringify(addedNotes) })
+    res.json("Task Notes Updated! 2")
+  }
+
+  // console.log(inputNotes)
+
+  // if (!task) {
+  //   return next(new ErrorHandler("Database model not found!", 403))
+  // } else {
+
+  //   await task.update({ Task_notes: Task_owner })
+  //   res.json("Task owner changed!")
+  // }
 })

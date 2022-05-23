@@ -62,6 +62,7 @@ exports.getSpecificPlan = async function (req, res) {
   try {
     const { App_Acronym } = req.query
     let plan = await Plan.findAll({ where: { App_Acronym } })
+    //console.log(plan)
     res.json(plan)
   } catch (e) {
     res.status(500).send(e)
@@ -94,6 +95,9 @@ exports.getSpecificTask = async function (req, res) {
     const { Task_id } = req.query
     console.log(Task_id)
     let task = await Task.findAll({ where: { Task_id } })
+
+    // To add parse notes
+
     res.json(task)
   } catch (e) {
     res.status(500).send(e)

@@ -35,8 +35,7 @@ module.exports = function (db) {
         allowNull: false
       },
       Task_notes: {
-        type: DataTypes.STRING,
-        allowNull: false
+        type: DataTypes.TEXT("medium")
       },
       Task_state: {
         type: DataTypes.STRING,
