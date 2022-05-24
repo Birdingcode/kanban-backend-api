@@ -67,13 +67,9 @@ exports.createApp = catchAsyncErrors(async (req, res, next) => {
 })
 
 exports.createPlan = catchAsyncErrors(async (req, res, next) => {
-  const { Plan_name, App_Acronym, Plan_startDate, Plan_endDate } = req.body
+  const { Plan_name, App_Acronym, Plan_Description, Plan_startDate, Plan_endDate } = req.body
   console.log(req.body)
-  if (!Plan_name || !App_Acronym || !Plan_startDate || !Plan_endDate) {
-    console.log(Plan_name)
-    console.log(Plan_startDate)
-    console.log(Plan_endDate)
-    console.log(App_Acronym)
+  if (!Plan_name || !App_Acronym || !Plan_Description || !Plan_startDate || !Plan_endDate) {
     return next(new ErrorHandler("Please fill in all fields", 400))
   }
 
@@ -81,6 +77,7 @@ exports.createPlan = catchAsyncErrors(async (req, res, next) => {
     await Plan.create({
       Plan_name,
       App_Acronym,
+      Plan_Description,
       Plan_startDate,
       Plan_endDate
     })
@@ -108,12 +105,15 @@ exports.createGroup = catchAsyncErrors(async (req, res, next) => {
 })
 
 exports.createTask = catchAsyncErrors(async (req, res, next) => {
-  const { Task_name, Plan_name, Task_description, Task_notes, Task_creator, Task_owner, Task_createDate } = req.body
+  const { username, Task_name, Plan_name, Task_description, Task_notes, Task_creator, Task_owner, Task_createDate } = req.body
   const { App_Acronym } = req.query
   console.log(req.body)
   if (!Task_name || !Plan_name || !App_Acronym || !Task_description || !Task_notes || !Task_creator || !Task_owner || !Task_createDate) {
     return next(new ErrorHandler("Please fill in all fields", 400))
   }
+
+  const currentDateTime = new Date().toLocaleString()
+  let newNotes = { username, Task_notes, currentDateTime }
 
   let rnum = await Application.findOne({ where: { App_Acronym } })
   let taskid = App_Acronym.concat("_", rnum.App_Rnumber)
@@ -125,7 +125,7 @@ exports.createTask = catchAsyncErrors(async (req, res, next) => {
         Plan_name: null,
         App_Acronym,
         Task_description,
-        Task_notes,
+        Task_notes: JSON.stringify([newNotes]),
         Task_creator,
         Task_owner: null,
         Task_createDate
@@ -381,34 +381,22 @@ exports.changeTaskOwner = catchAsyncErrors(async function (req, res, next) {
 
 exports.changeTaskNotes = catchAsyncErrors(async function (req, res, next) {
   const { Task_id, Task_notes, username } = req.body
-  console.log(username)
+
   if (!Task_notes) {
     return next(new ErrorHandler("Please fill in all fields", 400))
   }
   const currentDateTime = new Date().toLocaleString()
-  //const currentTime = new Date().toLocaleTimeString()
   const task = await Task.findOne({ where: { Task_id } })
   let newNotes = { username, Task_notes, currentDateTime }
-  // let parseNotes = JSON.parse(newNotes)
 
   if (task.Task_notes === null) {
     await task.update({ Task_notes: JSON.stringify([newNotes]) })
     res.json("Task Notes Updated! 1")
   } else {
     let addedNotes = JSON.parse(task.Task_notes)
-    console.log(addedNotes)
+    //console.log(addedNotes)
     addedNotes.push(newNotes)
     await task.update({ Task_notes: JSON.stringify(addedNotes) })
     res.json("Task Notes Updated! 2")
   }
-
-  // console.log(inputNotes)
-
-  // if (!task) {
-  //   return next(new ErrorHandler("Database model not found!", 403))
-  // } else {
-
-  //   await task.update({ Task_notes: Task_owner })
-  //   res.json("Task owner changed!")
-  // }
 })

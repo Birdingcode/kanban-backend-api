@@ -18,6 +18,10 @@ module.exports = function (db) {
           key: "App_Acronym"
         }
       },
+      Plan_Description: {
+        type: DataTypes.STRING,
+        allowNull: false
+      },
       Plan_startDate: {
         type: DataTypes.DATE,
         allowNull: false

@@ -3,7 +3,7 @@ const userController = require("./controllers/userController")
 const authController = require("./controllers/authController")
 const auth = require("./middlewares/auth")
 
-apiRouter.get("/", (req, res) => res.json("Hello, if you see this message that means your backend is up and running successfully. Congrats! Now let's continue learning React!"))
+apiRouter.get("/", (req, res) => res.json("Backend is up and running successfully!"))
 apiRouter.post("/register", auth.isAuthenticateduser, authController.registerUser)
 apiRouter.post("/login", authController.loginUser)
 apiRouter.get("/logout", authController.logoutUser)
@@ -17,13 +17,16 @@ apiRouter.post("/createGroup", auth.isAuthenticateduser, authController.createGr
 apiRouter.post("/createApp", auth.isAuthenticateduser, authController.createApp)
 apiRouter.post("/createPlan", auth.isAuthenticateduser, authController.createPlan)
 apiRouter.post("/createTask", auth.isAuthenticateduser, authController.createTask)
+
 apiRouter.post("/editApp", auth.isAuthenticateduser, authController.editApp)
 apiRouter.post("/editPlan", auth.isAuthenticateduser, authController.editPlan)
 apiRouter.post("/editGroup", auth.isAuthenticateduser, authController.editGroup)
+
 apiRouter.post("/changeTaskPlanName", auth.isAuthenticateduser, authController.changeTaskPlanName)
 apiRouter.post("/changeTaskDesc", auth.isAuthenticateduser, authController.changeTaskDesc)
 apiRouter.post("/changeTaskOwner", auth.isAuthenticateduser, authController.changeTaskOwner)
 apiRouter.post("/changeTaskNotes", auth.isAuthenticateduser, authController.changeTaskNotes)
+
 apiRouter.get("/getApp", auth.isAuthenticateduser, userController.getApp)
 apiRouter.get("/getSpecificApp", auth.isAuthenticateduser, userController.getSpecificApp)
 apiRouter.get("/getPlan", auth.isAuthenticateduser, userController.getPlan)
@@ -31,6 +34,7 @@ apiRouter.get("/getSpecificPlan", auth.isAuthenticateduser, userController.getSp
 apiRouter.get("/getSpecificPlanE", auth.isAuthenticateduser, userController.getSpecificPlanE)
 apiRouter.get("/getTask", auth.isAuthenticateduser, userController.getTask)
 apiRouter.get("/getSpecificTask", auth.isAuthenticateduser, userController.getSpecificTask)
+
 apiRouter.get("/getGroupApp", auth.isAuthenticateduser, userController.getGroupApp)
 apiRouter.get("/getCurrGroup", auth.isAuthenticateduser, userController.getCurrGroup)
 

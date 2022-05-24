@@ -102,51 +102,61 @@ exports.checkGroup = async function (req, res, next) {
   })
   const data = await user.getUsergrp()
   const task = await Task.findOne({ where: { Task_id } })
+  const currentDateTime = new Date().toLocaleString()
+  let Task_notes = ""
+  let newNotes = { username, Task_notes, currentDateTime }
   let success = false
-  //console.log(privilege[`App_${permission}`])
+
+  const addNotes = () => {
+    if (task.Task_notes === null) {
+      task.update({ Task_notes: JSON.stringify([newNotes]) })
+    } else {
+      let addedNotes = JSON.parse(task.Task_notes)
+      //console.log(addedNotes)
+      addedNotes.push(newNotes)
+      task.update({ Task_notes: JSON.stringify(addedNotes) })
+    }
+  }
+
   data.forEach(usergrp => {
     if (privilege[`App_${permission}`] === usergrp.dataValues.role && App_Acronym === usergrp.dataValues.App_Acronym) {
       //console.log(task)
       success = true
       //update task state
+
       try {
         if (!task) {
           return next(new ErrorHandler("Database model not found!", 403))
         } else {
           switch (permission) {
             case "permit_Open":
-              Task.update(
-                {
-                  Task_state: "ToDo"
-                },
-                { where: { Task_id } }
-              )
+              newNotes.Task_notes = "Moved task from 'Open' to 'ToDo'"
+              task.update({
+                Task_state: "ToDo"
+              })
+              addNotes()
               break
             case "permit_toDoList":
-              Task.update(
-                {
-                  Task_state: "Doing"
-                },
-                { where: { Task_id } }
-              )
+              newNotes.Task_notes = "Moved task from 'ToDo' to 'Doing'"
+              task.update({
+                Task_state: "Doing"
+              })
+              addNotes()
               break
             case "permit_Doing":
-              Task.update(
-                {
-                  Task_state: "Done"
-                },
-                { where: { Task_id } }
-              )
+              newNotes.Task_notes = "Moved task from 'Doing' to 'Done'"
+              task.update({
+                Task_state: "Done"
+              })
+              addNotes()
               sendingEmail()
               break
             case "permit_Done":
-              Task.update(
-                {
-                  Task_state: "Close"
-                },
-                { where: { Task_id } }
-              )
-
+              newNotes.Task_notes = "Moved task from 'Done' to 'Close'"
+              task.update({
+                Task_state: "Close"
+              })
+              addNotes()
               break
           }
         }
@@ -184,9 +194,22 @@ exports.checkGroupBack = async function (req, res, next) {
   })
   const data = await user.getUsergrp()
   const task = await Task.findOne({ where: { Task_id } })
+  const currentDateTime = new Date().toLocaleString()
+  let Task_notes = ""
+  let newNotes = { username, Task_notes, currentDateTime }
   let success = false
-  //console.log(task)
-  //console.log(privilege[`App_${permission}`])
+
+  const addNotes = () => {
+    if (task.Task_notes === null) {
+      task.update({ Task_notes: JSON.stringify([newNotes]) })
+    } else {
+      let addedNotes = JSON.parse(task.Task_notes)
+      //console.log(addedNotes)
+      addedNotes.push(newNotes)
+      task.update({ Task_notes: JSON.stringify(addedNotes) })
+    }
+  }
+
   data.forEach(usergrp => {
     if (privilege[`App_${permission}`] === usergrp.dataValues.role && App_Acronym === usergrp.dataValues.App_Acronym) {
       success = true
@@ -198,20 +221,18 @@ exports.checkGroupBack = async function (req, res, next) {
         } else {
           switch (permission) {
             case "permit_Doing":
-              Task.update(
-                {
-                  Task_state: "ToDo"
-                },
-                { where: { Task_id } }
-              )
+              newNotes.Task_notes = "Moved task from 'Doing' to 'ToDo'"
+              task.update({
+                Task_state: "ToDo"
+              })
+              addNotes()
               break
             case "permit_Done":
-              Task.update(
-                {
-                  Task_state: "Doing"
-                },
-                { where: { Task_id } }
-              )
+              newNotes.Task_notes = "Moved task from 'Done' to 'Doing'"
+              task.update({
+                Task_state: "Doing"
+              })
+              addNotes()
               break
           }
         }
