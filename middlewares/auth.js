@@ -37,7 +37,7 @@ exports.checkGroupAPM = async function (req, res, next) {
   data.forEach(usergrp => {
     if (usergrp.dataValues.role === "Superadmin") {
       success = "authAdmin"
-    } else if (usergrp.dataValues.role === "PM") {
+    } else if (usergrp.dataValues.role === "PM" || usergrp.dataValues.role.substring(usergrp.dataValues.role.indexOf("_") + 1) === "PM") {
       success = "authPM"
     }
   })
@@ -54,7 +54,7 @@ exports.checkCreate = async function (req, res, next) {
   const { username } = req.body
   const { App_Acronym } = req.query
   const user = await UserGroup.findAll({
-    where: { username, App_Acronym }
+    where: { username }
   })
   console.log(user)
   const app = await Application.findOne({ where: { App_Acronym } })
@@ -62,7 +62,26 @@ exports.checkCreate = async function (req, res, next) {
 
   let success = false
   user.forEach(user => {
-    if (user.dataValues.role === app.dataValues.App_permit_Create) {
+    if (user.dataValues.role === app.dataValues.App_permit_Create || user.dataValues.role.substring(user.dataValues.role.indexOf("_") + 1) === app.dataValues.App_permit_Create) {
+      success = true
+    }
+  })
+
+  res.json(success)
+}
+
+exports.checkPlan = async function (req, res, next) {
+  const { username } = req.body
+
+  const user = await UserGroup.findAll({
+    where: { username }
+  })
+  // console.log(user)
+
+  let success = false
+
+  user.forEach(user => {
+    if (user.dataValues.role === "PM" || user.dataValues.role.substring(user.dataValues.role.indexOf("_") + 1) === "PM") {
       success = true
     }
   })

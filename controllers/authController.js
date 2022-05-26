@@ -27,8 +27,7 @@ exports.registerUser = catchAsyncErrors(async (req, res, next) => {
     for (let i = 0; i < role.length; i++) {
       await UserGroup.create({
         username,
-        App_Acronym: role[i].slice(0, 3),
-        role: role[i].slice(6)
+        role: role[i]
       })
     }
 
@@ -57,7 +56,6 @@ exports.createApp = catchAsyncErrors(async (req, res, next) => {
       App_permit_toDoList,
       App_permit_Doing,
       App_permit_Done,
-
       App_permit_Create
     })
     res.json("App Created!")
@@ -105,10 +103,10 @@ exports.createGroup = catchAsyncErrors(async (req, res, next) => {
 })
 
 exports.createTask = catchAsyncErrors(async (req, res, next) => {
-  const { username, Task_name, Plan_name, Task_description, Task_notes, Task_creator, Task_owner, Task_createDate } = req.body
+  const { username, Task_name, Plan_name, Task_description, Task_notes, Task_creator, Task_createDate } = req.body
   const { App_Acronym } = req.query
   console.log(req.body)
-  if (!Task_name || !Plan_name || !App_Acronym || !Task_description || !Task_notes || !Task_creator || !Task_owner || !Task_createDate) {
+  if (!Task_name || !App_Acronym || !Task_description || !Task_notes || !Task_creator || !Task_createDate) {
     return next(new ErrorHandler("Please fill in all fields", 400))
   }
 
@@ -118,19 +116,17 @@ exports.createTask = catchAsyncErrors(async (req, res, next) => {
   let rnum = await Application.findOne({ where: { App_Acronym } })
   let taskid = App_Acronym.concat("_", rnum.App_Rnumber)
   try {
-    if (Plan_name === "N/A" || Task_owner === "N/A") {
-      await Task.create({
-        Task_id: taskid,
-        Task_name,
-        Plan_name: null,
-        App_Acronym,
-        Task_description,
-        Task_notes: JSON.stringify([newNotes]),
-        Task_creator,
-        Task_owner: null,
-        Task_createDate
-      })
-    }
+    await Task.create({
+      Task_id: taskid,
+      Task_name,
+      Plan_name,
+      App_Acronym,
+      Task_description,
+      Task_notes: JSON.stringify([newNotes]),
+      Task_creator,
+      Task_owner: null,
+      Task_createDate
+    })
     await rnum.update({ App_Rnumber: rnum.App_Rnumber + 1 })
     res.json("Task Created!")
   } catch (e) {
@@ -224,6 +220,19 @@ exports.changeEmail = catchAsyncErrors(async function (req, res, next) {
   }
 })
 
+exports.changeStatus = async function (req, res) {
+  try {
+    const findID = await User.findOne({ where: { username: req.body.username }, include: [{ model: UserGroup, as: "usergrp" }] })
+    if (findID != null) {
+      await findID.update({ status: Sequelize.literal("NOT status") })
+      let users = await User.findAll({ include: [{ model: UserGroup, as: "usergrp" }] })
+      res.json(users)
+    }
+  } catch (e) {
+    res.status(500).send(e)
+  }
+}
+
 exports.doesPasswordCondition = async function (req, res) {
   const { password } = req.body
   var regularExpression = new RegExp(/^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{7,11}$/)
@@ -313,7 +322,7 @@ exports.editPlan = catchAsyncErrors(async function (req, res, next) {
   }
 })
 
-exports.editGroup = catchAsyncErrors(async function (req, res, next) {
+exports.changeGroup = catchAsyncErrors(async function (req, res, next) {
   const { username, role } = req.body
   //console.log(req.body)
   //const oldUser = await UserGroup.findAll({ where: { username } })
@@ -324,8 +333,7 @@ exports.editGroup = catchAsyncErrors(async function (req, res, next) {
     for (let i = 0; i < role.length; i++) {
       const usery = await UserGroup.create({
         username,
-        App_Acronym: role[i].slice(0, 3),
-        role: role[i].slice(6)
+        role: role[i]
       })
     }
     res.json("Group Updated")
@@ -334,54 +342,54 @@ exports.editGroup = catchAsyncErrors(async function (req, res, next) {
   }
 })
 
-exports.changeTaskPlanName = catchAsyncErrors(async function (req, res, next) {
-  const { Task_id, Plan_name } = req.body
-  if (!Plan_name) {
-    return next(new ErrorHandler("Please fill in all fields", 400))
-  }
+// exports.changeTaskPlanName = catchAsyncErrors(async function (req, res, next) {
+//   const { Task_id, Plan_name } = req.body
+//   if (!Plan_name) {
+//     return next(new ErrorHandler("Please fill in all fields", 400))
+//   }
 
-  const task = await Task.findOne({ where: { Task_id } })
-  if (!task) {
-    return next(new ErrorHandler("Database model not found!", 403))
-  } else {
-    await task.update({ Plan_name: Plan_name })
-    res.json("Plan Name changed!")
-  }
-})
+//   const task = await Task.findOne({ where: { Task_id } })
+//   if (!task) {
+//     return next(new ErrorHandler("Database model not found!", 403))
+//   } else {
+//     await task.update({ Plan_name: Plan_name })
+//     res.json("Plan Name changed!")
+//   }
+// })
 
-exports.changeTaskDesc = catchAsyncErrors(async function (req, res, next) {
-  const { Task_id, Task_description } = req.body
-  if (!Task_description) {
-    return next(new ErrorHandler("Please fill in all fields", 400))
-  }
+// exports.changeTaskDesc = catchAsyncErrors(async function (req, res, next) {
+//   const { Task_id, Task_description } = req.body
+//   if (!Task_description) {
+//     return next(new ErrorHandler("Please fill in all fields", 400))
+//   }
 
-  const task = await Task.findOne({ where: { Task_id } })
-  if (!task) {
-    return next(new ErrorHandler("Database model not found!", 403))
-  } else {
-    await task.update({ Task_description: Task_description })
-    res.json("Task Desc changed!")
-  }
-})
+//   const task = await Task.findOne({ where: { Task_id } })
+//   if (!task) {
+//     return next(new ErrorHandler("Database model not found!", 403))
+//   } else {
+//     await task.update({ Task_description: Task_description })
+//     res.json("Task Desc changed!")
+//   }
+// })
 
-exports.changeTaskOwner = catchAsyncErrors(async function (req, res, next) {
-  const { Task_id, Task_owner } = req.body
-  if (!Task_owner) {
-    return next(new ErrorHandler("Please fill in all fields", 400))
-  }
+// exports.changeTaskOwner = catchAsyncErrors(async function (req, res, next) {
+//   const { Task_id, Task_owner } = req.body
+//   if (!Task_owner) {
+//     return next(new ErrorHandler("Please fill in all fields", 400))
+//   }
 
-  const task = await Task.findOne({ where: { Task_id } })
-  if (!task) {
-    return next(new ErrorHandler("Database model not found!", 403))
-  } else {
-    await task.update({ Task_owner: Task_owner })
-    res.json("Task owner changed!")
-  }
-})
+//   const task = await Task.findOne({ where: { Task_id } })
+//   if (!task) {
+//     return next(new ErrorHandler("Database model not found!", 403))
+//   } else {
+//     await task.update({ Task_owner: Task_owner })
+//     res.json("Task owner changed!")
+//   }
+// })
 
 exports.changeTaskNotes = catchAsyncErrors(async function (req, res, next) {
   const { Task_id, Task_notes, username } = req.body
-
+  console.log(req.body)
   if (!Task_notes) {
     return next(new ErrorHandler("Please fill in all fields", 400))
   }

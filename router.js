@@ -4,48 +4,50 @@ const authController = require("./controllers/authController")
 const auth = require("./middlewares/auth")
 
 apiRouter.get("/", (req, res) => res.json("Backend is up and running successfully!"))
-apiRouter.post("/register", auth.isAuthenticateduser, authController.registerUser)
-apiRouter.post("/login", authController.loginUser)
-apiRouter.get("/logout", authController.logoutUser)
+apiRouter.post("/register", auth.isAuthenticateduser, authController.registerUser) //cleared
+apiRouter.post("/login", authController.loginUser) //cleared
+apiRouter.get("/logout", authController.logoutUser) //cleared
 
-apiRouter.get("/userManagement", auth.isAuthenticateduser, userController.getAllUser)
-apiRouter.post("/changePassword", auth.isAuthenticateduser, authController.changePassword)
-apiRouter.post("/changeEmail", auth.isAuthenticateduser, authController.changeEmail)
-apiRouter.post("/changeStatus", auth.isAuthenticateduser, userController.changeStatus)
+apiRouter.get("/userManagement", auth.isAuthenticateduser, userController.getAllUser) //cleared
+apiRouter.post("/changePassword", auth.isAuthenticateduser, authController.changePassword) //cleared
+apiRouter.post("/changeEmail", auth.isAuthenticateduser, authController.changeEmail) //cleared
+apiRouter.post("/changeStatus", auth.isAuthenticateduser, authController.changeStatus) //cleared
+apiRouter.post("/changeGroup", auth.isAuthenticateduser, authController.changeGroup) //cleared
 
-apiRouter.post("/createGroup", auth.isAuthenticateduser, authController.createGroup)
-apiRouter.post("/createApp", auth.isAuthenticateduser, authController.createApp)
-apiRouter.post("/createPlan", auth.isAuthenticateduser, authController.createPlan)
-apiRouter.post("/createTask", auth.isAuthenticateduser, authController.createTask)
+apiRouter.post("/createGroup", auth.isAuthenticateduser, authController.createGroup) //cleared
+apiRouter.post("/createApp", auth.isAuthenticateduser, authController.createApp) //cleared
+apiRouter.post("/createPlan", auth.isAuthenticateduser, authController.createPlan) //cleared
+apiRouter.post("/createTask", auth.isAuthenticateduser, authController.createTask) //cleared
 
-apiRouter.post("/editApp", auth.isAuthenticateduser, authController.editApp)
-apiRouter.post("/editPlan", auth.isAuthenticateduser, authController.editPlan)
-apiRouter.post("/editGroup", auth.isAuthenticateduser, authController.editGroup)
+apiRouter.post("/editApp", auth.isAuthenticateduser, authController.editApp) //cleared
+apiRouter.post("/editPlan", auth.isAuthenticateduser, authController.editPlan) //cleared
 
-apiRouter.post("/changeTaskPlanName", auth.isAuthenticateduser, authController.changeTaskPlanName)
-apiRouter.post("/changeTaskDesc", auth.isAuthenticateduser, authController.changeTaskDesc)
-apiRouter.post("/changeTaskOwner", auth.isAuthenticateduser, authController.changeTaskOwner)
+// apiRouter.post("/changeTaskPlanName", auth.isAuthenticateduser, authController.changeTaskPlanName)
+// apiRouter.post("/changeTaskDesc", auth.isAuthenticateduser, authController.changeTaskDesc)
+// apiRouter.post("/changeTaskOwner", auth.isAuthenticateduser, authController.changeTaskOwner)
 apiRouter.post("/changeTaskNotes", auth.isAuthenticateduser, authController.changeTaskNotes)
 
-apiRouter.get("/getApp", auth.isAuthenticateduser, userController.getApp)
+apiRouter.get("/getUserGroup", auth.isAuthenticateduser, userController.getUserGroup) //cleared
+apiRouter.get("/getApp", auth.isAuthenticateduser, userController.getApp) //cleared
 apiRouter.get("/getSpecificApp", auth.isAuthenticateduser, userController.getSpecificApp)
-apiRouter.get("/getPlan", auth.isAuthenticateduser, userController.getPlan)
-apiRouter.get("/getSpecificPlan", auth.isAuthenticateduser, userController.getSpecificPlan)
-apiRouter.get("/getSpecificPlanE", auth.isAuthenticateduser, userController.getSpecificPlanE)
-apiRouter.get("/getTask", auth.isAuthenticateduser, userController.getTask)
-apiRouter.get("/getSpecificTask", auth.isAuthenticateduser, userController.getSpecificTask)
+// apiRouter.get("/getPlan", auth.isAuthenticateduser, userController.getPlan)
+apiRouter.get("/getSpecificPlan", auth.isAuthenticateduser, userController.getSpecificPlan) //cleared
+apiRouter.get("/getSpecificPlanE", auth.isAuthenticateduser, userController.getSpecificPlanE) //cleared
+apiRouter.get("/getTask", auth.isAuthenticateduser, userController.getTask) //cleared
+apiRouter.get("/getSpecificTask", auth.isAuthenticateduser, userController.getSpecificTask) //cleared
 
-apiRouter.get("/getGroupApp", auth.isAuthenticateduser, userController.getGroupApp)
-apiRouter.get("/getCurrGroup", auth.isAuthenticateduser, userController.getCurrGroup)
+apiRouter.get("/getGroupApp", auth.isAuthenticateduser, userController.getGroupApp) //cleared
+apiRouter.get("/getCurrGroup", auth.isAuthenticateduser, userController.getCurrGroup) //cleared
 
-apiRouter.post("/doesUsernameExist", authController.doesUsernameExist)
-apiRouter.post("/doesEmailExist", authController.doesEmailExist)
-apiRouter.post("/doesPasswordCondition", authController.doesPasswordCondition)
-apiRouter.post("/doesNewEmailExist", authController.doesNewEmailExist)
+apiRouter.post("/doesUsernameExist", authController.doesUsernameExist) //cleared
+apiRouter.post("/doesEmailExist", authController.doesEmailExist) //cleared
+apiRouter.post("/doesPasswordCondition", authController.doesPasswordCondition) //cleared
+apiRouter.post("/doesNewEmailExist", authController.doesNewEmailExist) //cleared
 
 apiRouter.post("/checkGroup", auth.isAuthenticateduser, auth.checkGroup)
 apiRouter.post("/checkGroupBack", auth.isAuthenticateduser, auth.checkGroupBack)
-apiRouter.post("/checkGroupAPM", auth.isAuthenticateduser, auth.checkGroupAPM)
-apiRouter.post("/checkCreate", auth.isAuthenticateduser, auth.checkCreate)
+apiRouter.post("/checkGroupAPM", auth.isAuthenticateduser, auth.checkGroupAPM) //cleared
+apiRouter.post("/checkCreate", auth.isAuthenticateduser, auth.checkCreate) //cleared
+apiRouter.post("/checkPlan", auth.isAuthenticateduser, auth.checkPlan) //cleared
 
 module.exports = apiRouter

@@ -17,14 +17,11 @@ exports.getAllUser = async function (req, res) {
   }
 }
 
-exports.changeStatus = async function (req, res) {
+exports.getUserGroup = async function (req, res) {
+  const { username } = req.query
   try {
-    const findID = await User.findOne({ where: { username: req.body.username }, include: [{ model: UserGroup, as: "usergrp" }] })
-    if (findID != null) {
-      await findID.update({ status: Sequelize.literal("NOT status") })
-      let users = await User.findAll({ include: [{ model: UserGroup, as: "usergrp" }] })
-      res.json(users)
-    }
+    let userGroup = await UserGroup.findAll({ attributes: ["username", [Sequelize.fn("GROUP_CONCAT", Sequelize.col("role")), "role"]], group: ["username"], where: { username } })
+    res.json(userGroup)
   } catch (e) {
     res.status(500).send(e)
   }
@@ -49,14 +46,15 @@ exports.getSpecificApp = async function (req, res) {
   }
 }
 
-exports.getPlan = async function (req, res) {
-  try {
-    let plan = await Plan.findAll()
-    res.json(plan)
-  } catch (e) {
-    res.status(500).send(e)
-  }
-}
+// exports.getPlan = async function (req, res) {
+//   const { App_Acronym } = req.query
+//   try {
+//     let plan = await Plan.findAll({ where: { App_Acronym } })
+//     res.json(plan)
+//   } catch (e) {
+//     res.status(500).send(e)
+//   }
+// }
 
 exports.getSpecificPlan = async function (req, res) {
   try {
@@ -109,17 +107,14 @@ exports.getGroupApp = async function (req, res) {
   let concatRGArray = []
 
   try {
-    let app = await Application.findAll({ attributes: ["App_Acronym"] })
     let role = await GroupName.findAll()
     //console.log(app)
     //console.log(role)
 
-    for (let i = 0; i < app.length; i++) {
-      for (let k = 0; k < role.length; k++) {
-        let JSONconcat = { appAcronym: app[i].dataValues.App_Acronym, role: role[k].dataValues.role }
-        // concatRG += app[k].dataValues.App_Acronym.concat(" - ", role[i].dataValues.role)
-        concatRGArray.push(JSONconcat)
-      }
+    for (let k = 0; k < role.length; k++) {
+      let JSONconcat = { role: role[k].dataValues.role }
+      // concatRG += app[k].dataValues.App_Acronym.concat(" - ", role[i].dataValues.role)
+      concatRGArray.push(JSONconcat)
     }
 
     await res.json(concatRGArray)
@@ -139,7 +134,7 @@ exports.getCurrGroup = async function (req, res) {
     //console.log(currGroup)
 
     for (let i = 0; i < currGroup.length; i++) {
-      let JSONconcat = { appAcronym: currGroup[i].dataValues.App_Acronym, role: currGroup[i].dataValues.role }
+      let JSONconcat = { role: currGroup[i].dataValues.role }
       // concatRG += app[k].dataValues.App_Acronym.concat(" - ", role[i].dataValues.role)
       concatRGArray.push(JSONconcat)
     }
