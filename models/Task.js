@@ -47,7 +47,8 @@ module.exports = function (db) {
         allowNull: false
       },
       Task_owner: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        defaultValue: null
       },
       Task_createDate: {
         type: DataTypes.DATE,

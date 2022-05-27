@@ -90,14 +90,43 @@ exports.getTask = async function (req, res) {
 
 exports.getSpecificTask = async function (req, res) {
   try {
-    const { Task_id } = req.query
-    console.log(Task_id)
-    let task = await Task.findAll({ where: { Task_id } })
+    let permission = ""
+    const { Task_id, username } = req.query
+    // console.log(Task_id)
+    const task = await Task.findAll({ where: { Task_id }, include: [{ model: Application, as: "appTask" }] })
 
-    // To add parse notes
+    let taskState = task[0].Task_state
+    let App_Acronym = task[0].App_Acronym
 
-    res.json(task)
+    let privilege = await Application.findOne({ where: { App_Acronym } })
+    // console.log(App_Acronym)
+    if (taskState === "Close") {
+      res.json({ task, noPermission: true })
+      return
+    }
+    switch (taskState) {
+      case "Open":
+        permission = "App_permit_Open"
+        break
+      case "ToDo":
+        permission = "App_permit_toDoList"
+        break
+      case "Doing":
+        permission = "App_permit_Doing"
+        break
+      case "Done":
+        permission = "App_permit_Done"
+        break
+    }
+
+    console.log(privilege.dataValues)
+    let matchingPrivilege = privilege.dataValues[permission]
+    console.log(matchingPrivilege)
+    const noPermission = await UserGroup.findAll({ where: { username: username, role: matchingPrivilege } })
+    console.log(noPermission)
+    res.json({ task, noPermission: noPermission.length ? false : true })
   } catch (e) {
+    console.log(e)
     res.status(500).send(e)
   }
 }

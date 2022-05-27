@@ -124,7 +124,6 @@ exports.createTask = catchAsyncErrors(async (req, res, next) => {
       Task_description,
       Task_notes: JSON.stringify([newNotes]),
       Task_creator,
-      Task_owner: null,
       Task_createDate
     })
     await rnum.update({ App_Rnumber: rnum.App_Rnumber + 1 })
@@ -404,7 +403,7 @@ exports.changeTaskNotes = catchAsyncErrors(async function (req, res, next) {
     let addedNotes = JSON.parse(task.Task_notes)
     //console.log(addedNotes)
     addedNotes.push(newNotes)
-    await task.update({ Task_notes: JSON.stringify(addedNotes) })
+    await task.update({ Task_notes: JSON.stringify(addedNotes), Task_owner: username })
     res.json("Task Notes Updated! 2")
   }
 })

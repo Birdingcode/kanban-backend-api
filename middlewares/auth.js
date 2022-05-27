@@ -138,7 +138,7 @@ exports.checkGroup = async function (req, res, next) {
   }
 
   data.forEach(usergrp => {
-    if (privilege[`App_${permission}`] === usergrp.dataValues.role && App_Acronym === usergrp.dataValues.App_Acronym) {
+    if (privilege[`App_${permission}`] === usergrp.dataValues.role) {
       //console.log(task)
       success = true
       //update task state
@@ -151,21 +151,24 @@ exports.checkGroup = async function (req, res, next) {
             case "permit_Open":
               newNotes.Task_notes = "Moved task from 'Open' to 'ToDo'"
               task.update({
-                Task_state: "ToDo"
+                Task_state: "ToDo",
+                Task_owner: username
               })
               addNotes()
               break
             case "permit_toDoList":
               newNotes.Task_notes = "Moved task from 'ToDo' to 'Doing'"
               task.update({
-                Task_state: "Doing"
+                Task_state: "Doing",
+                Task_owner: username
               })
               addNotes()
               break
             case "permit_Doing":
               newNotes.Task_notes = "Moved task from 'Doing' to 'Done'"
               task.update({
-                Task_state: "Done"
+                Task_state: "Done",
+                Task_owner: username
               })
               addNotes()
               sendingEmail()
@@ -173,7 +176,8 @@ exports.checkGroup = async function (req, res, next) {
             case "permit_Done":
               newNotes.Task_notes = "Moved task from 'Done' to 'Close'"
               task.update({
-                Task_state: "Close"
+                Task_state: "Close",
+                Task_owner: username
               })
               addNotes()
               break
@@ -230,7 +234,7 @@ exports.checkGroupBack = async function (req, res, next) {
   }
 
   data.forEach(usergrp => {
-    if (privilege[`App_${permission}`] === usergrp.dataValues.role && App_Acronym === usergrp.dataValues.App_Acronym) {
+    if (privilege[`App_${permission}`] === usergrp.dataValues.role) {
       success = true
 
       //update task state
@@ -242,14 +246,16 @@ exports.checkGroupBack = async function (req, res, next) {
             case "permit_Doing":
               newNotes.Task_notes = "Moved task from 'Doing' to 'ToDo'"
               task.update({
-                Task_state: "ToDo"
+                Task_state: "ToDo",
+                Task_owner: username
               })
               addNotes()
               break
             case "permit_Done":
               newNotes.Task_notes = "Moved task from 'Done' to 'Doing'"
               task.update({
-                Task_state: "Doing"
+                Task_state: "Doing",
+                Task_owner: username
               })
               addNotes()
               break

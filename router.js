@@ -25,11 +25,11 @@ apiRouter.post("/editPlan", auth.isAuthenticateduser, authController.editPlan) /
 // apiRouter.post("/changeTaskPlanName", auth.isAuthenticateduser, authController.changeTaskPlanName)
 // apiRouter.post("/changeTaskDesc", auth.isAuthenticateduser, authController.changeTaskDesc)
 // apiRouter.post("/changeTaskOwner", auth.isAuthenticateduser, authController.changeTaskOwner)
-apiRouter.post("/changeTaskNotes", auth.isAuthenticateduser, authController.changeTaskNotes)
+apiRouter.post("/changeTaskNotes", auth.isAuthenticateduser, authController.changeTaskNotes) //cleared
 
 apiRouter.get("/getUserGroup", auth.isAuthenticateduser, userController.getUserGroup) //cleared
 apiRouter.get("/getApp", auth.isAuthenticateduser, userController.getApp) //cleared
-apiRouter.get("/getSpecificApp", auth.isAuthenticateduser, userController.getSpecificApp)
+apiRouter.get("/getSpecificApp", auth.isAuthenticateduser, userController.getSpecificApp) //cleared
 // apiRouter.get("/getPlan", auth.isAuthenticateduser, userController.getPlan)
 apiRouter.get("/getSpecificPlan", auth.isAuthenticateduser, userController.getSpecificPlan) //cleared
 apiRouter.get("/getSpecificPlanE", auth.isAuthenticateduser, userController.getSpecificPlanE) //cleared
