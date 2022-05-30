@@ -9,7 +9,7 @@ apiRouter.post("/login", authController.loginUser) //cleared
 apiRouter.get("/logout", authController.logoutUser) //cleared
 
 apiRouter.get("/userManagement", auth.isAuthenticateduser, userController.getAllUser) //cleared
-apiRouter.post("/changePassword", auth.isAuthenticateduser, authController.changePassword) //cleared
+apiRouter.post("/:username/changePassword/:id", auth.isAuthenticateduser, authController.changePassword) //cleared
 apiRouter.post("/changeEmail", auth.isAuthenticateduser, authController.changeEmail) //cleared
 apiRouter.post("/changeStatus", auth.isAuthenticateduser, authController.changeStatus) //cleared
 apiRouter.post("/changeGroup", auth.isAuthenticateduser, authController.changeGroup) //cleared
@@ -49,5 +49,6 @@ apiRouter.post("/checkGroupBack", auth.isAuthenticateduser, auth.checkGroupBack)
 apiRouter.post("/checkGroupAPM", auth.isAuthenticateduser, auth.checkGroupAPM) //cleared
 apiRouter.post("/checkCreate", auth.isAuthenticateduser, auth.checkCreate) //cleared
 apiRouter.post("/checkPlan", auth.isAuthenticateduser, auth.checkPlan) //cleared
+apiRouter.get("/testing", authController.testing) //cleared
 
 module.exports = apiRouter

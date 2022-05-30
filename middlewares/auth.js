@@ -171,7 +171,7 @@ exports.checkGroup = async function (req, res, next) {
                 Task_owner: username
               })
               addNotes()
-              sendingEmail()
+              sendingEmail(Task_id)
               break
             case "permit_Done":
               newNotes.Task_notes = "Moved task from 'Done' to 'Close'"

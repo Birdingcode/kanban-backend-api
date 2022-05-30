@@ -19,6 +19,7 @@ exports.getAllUser = async function (req, res) {
 
 exports.getUserGroup = async function (req, res) {
   const { username } = req.query
+  console.log(req.query)
   try {
     let userGroup = await UserGroup.findAll({ attributes: ["username", [Sequelize.fn("GROUP_CONCAT", Sequelize.col("role")), "role"]], group: ["username"], where: { username } })
     res.json(userGroup)

@@ -19,9 +19,6 @@ const GroupName = require("./GroupName")(db)
 User.hasMany(UserGroup, { as: "usergrp", foreignKey: "username" })
 UserGroup.belongsTo(User, { as: "usergrp", foreignKey: "username" })
 
-UserGroup.belongsTo(Application, { as: "userApp", foreignKey: "App_Acronym" })
-Application.hasMany(UserGroup, { as: "userApp", foreignKey: "App_Acronym" })
-
 //GroupName.hasMany(UserGroup, { as: "grprole", foreignkey: "role" })
 UserGroup.belongsTo(GroupName, { as: "grprole", foreignKey: "role" })
 

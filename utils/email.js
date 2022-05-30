@@ -2,7 +2,7 @@ const nodemailer = require("nodemailer")
 const dotenv = require("dotenv")
 dotenv.config({ path: "./config/config.env" })
 
-async function sendEmail() {
+async function sendEmail(Task_id) {
   let transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 587,
@@ -16,7 +16,7 @@ async function sendEmail() {
   let info = await transporter.sendMail({
     from: '"Kanban Testmail 👻" <kanbantestmail@gmail.com>', // sender address
     to: "kanbantestmail@gmail.com", // list of receivers
-    subject: "A Task has been promoted to Done ✔", // Subject line
+    subject: `Task: ${Task_id} has been promoted to Done ✔`, // Subject line
     text: "This is an automated message" // plain text body
   })
 

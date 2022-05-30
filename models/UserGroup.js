@@ -21,14 +21,6 @@ module.exports = function (db) {
           key: "username"
         }
       },
-      App_Acronym: {
-        type: DataTypes.STRING,
-        allowNull: true,
-        references: {
-          model: Application,
-          key: "App_Acronym"
-        }
-      },
       role: {
         type: DataTypes.STRING,
         allowNull: false,

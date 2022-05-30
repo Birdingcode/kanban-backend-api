@@ -243,7 +243,9 @@ exports.doesPasswordCondition = async function (req, res) {
 }
 
 exports.changePassword = catchAsyncErrors(async function (req, res, next) {
-  const { username, password, cfmpassword } = req.body
+  console.log(req.params)
+  const { password, cfmpassword } = req.body
+  const username = req.params.username
   if (!username || !password || !cfmpassword) {
     return next(new ErrorHandler("Please fill in all fields", 400))
   }
@@ -406,4 +408,9 @@ exports.changeTaskNotes = catchAsyncErrors(async function (req, res, next) {
     await task.update({ Task_notes: JSON.stringify(addedNotes), Task_owner: username })
     res.json("Task Notes Updated! 2")
   }
+})
+
+exports.testing = catchAsyncErrors(async function (req, res, next) {
+  console.log(req.query)
+  res.send("ok")
 })
